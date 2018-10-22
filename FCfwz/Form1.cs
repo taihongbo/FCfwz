@@ -11,6 +11,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+using NPOI.HSSF.UserModel;
+using NPOI.SS.UserModel;
+using NPOI.SS.Util;
+
 
 namespace FCfwz
 {
@@ -144,10 +148,11 @@ namespace FCfwz
             List<s_m_total> m = new List<s_m_total>();
             List<s_n_total> n = new List<s_n_total>();
 
-            if (this.radioButton1.Checked == true) {
+            if (this.radioButton1.Checked == true)
+            {
                 m = Get_m_total();
                 this.dataGridView1.DataSource = null;
-                this.dataGridView1.DataSource = m; 
+                this.dataGridView1.DataSource = m;
             }
 
             if (this.radioButton2.Checked == true)
@@ -155,7 +160,7 @@ namespace FCfwz
                 n = Get_n_total();
                 this.dataGridView1.DataSource = null;
                 this.dataGridView1.DataSource = n;
-            } 
+            }
         }
         //导出
         private void button5_Click(object sender, EventArgs e)
@@ -165,13 +170,284 @@ namespace FCfwz
 
             if (this.radioButton1.Checked == true)
             {
-                m = Get_m_total(); 
+                m = Get_m_total();
+                Excel_m_total(m);
             }
 
             if (this.radioButton2.Checked == true)
             {
-                n = Get_n_total(); 
+                n = Get_n_total();
+                Excel_n_total(n);
             }
+        }
+
+        private void Excel_m_total(List<s_m_total> m)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("类别", System.Type.GetType("System.String"));
+            dt.Columns.Add("药品", System.Type.GetType("System.String"));
+            dt.Columns.Add("规格", System.Type.GetType("System.String"));
+            dt.Columns.Add("单位", System.Type.GetType("System.String"));
+            dt.Columns.Add("单价", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("药品数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("药品金额", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("部门", System.Type.GetType("System.String"));
+            dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("医师", System.Type.GetType("System.String"));
+            dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
+            foreach (s_m_total item in m)
+            {
+                dt.Rows.Add(item.类名, item.药品名称, item.规格, item.单位, item.单价, Convert.ToInt32(item.sl_t3), item.je_t3, item.部门名称, Convert.ToInt32(item.sl_t4), item.je_t4, item.医师名称, Convert.ToInt32(item.sl_t5), item.je_t5);
+            }
+            IWorkbook workBook = new HSSFWorkbook();
+            workBook = ExcelHelper.ToExcel(dt, "药品分类汇总");
+
+            ISheet sheet1 = workBook.GetSheetAt(0);
+            sheet1.SetColumnWidth(0, 20 * 256);     //类名
+            sheet1.SetColumnWidth(1, 50 * 256);     //药品名称
+            sheet1.SetColumnWidth(2, 10 * 256);     //规格
+            sheet1.SetColumnWidth(3, 6 * 256);      //单位
+            sheet1.SetColumnWidth(4, 12 * 256);     //单价
+            sheet1.SetColumnWidth(5, 12 * 256);     //数量
+            sheet1.SetColumnWidth(6, 12 * 256);     //金额
+            sheet1.SetColumnWidth(7, 20 * 256);     //部门
+            sheet1.SetColumnWidth(8, 12 * 256);     //数量
+            sheet1.SetColumnWidth(9, 12 * 256);     //金额
+            sheet1.SetColumnWidth(10, 12 * 256);    //医师
+            sheet1.SetColumnWidth(11, 12 * 256);    //数量
+            sheet1.SetColumnWidth(12, 12 * 256);    //金额
+
+            //整理表头 
+            IRow row;
+            ICell cell;
+            ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
+            #region 第一行
+            row = sheet1.GetRow(1);
+            cell = row.GetCell(0);
+            cell.SetCellValue("科室：" + Department.Text + " 日期范围：" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + " ~ " + this.dateTimePicker2.Value.ToString("yyyy-MM-dd"));
+            #endregion
+            #region 第二行
+            row = sheet1.GetRow(2);
+            cell = row.GetCell(0);
+            cell.SetCellValue("药品");
+            cell = row.GetCell(1);
+            cell.SetCellValue("药品");
+            cell = row.GetCell(2);
+            cell.SetCellValue("药品");
+            cell = row.GetCell(3);
+            cell.SetCellValue("药品");
+            cell = row.GetCell(4);
+            cell.SetCellValue("药品");
+            cell = row.GetCell(5);
+            cell.SetCellValue("药品");
+            cell = row.GetCell(6);
+            cell.SetCellValue("药品");
+
+            cell = row.GetCell(7);
+            cell.SetCellValue("部门");
+            cell = row.GetCell(8);
+            cell.SetCellValue("部门");
+            cell = row.GetCell(9);
+            cell.SetCellValue("部门");
+
+            cell = row.GetCell(10);
+            cell.SetCellValue("医师");
+            cell = row.GetCell(11);
+            cell.SetCellValue("医师");
+            cell = row.GetCell(12);
+            cell.SetCellValue("医师");
+            #endregion 
+            #region 第三行
+            row = sheet1.GetRow(3);
+            cell = row.GetCell(0);
+            cell.SetCellValue("类别");
+            cell = row.GetCell(1);
+            cell.SetCellValue("药名");
+            cell = row.GetCell(2);
+            cell.SetCellValue("规格");
+            cell = row.GetCell(3);
+            cell.SetCellValue("单位");
+            cell = row.GetCell(4);
+            cell.SetCellValue("单价");
+            cell = row.GetCell(5);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(6);
+            cell.SetCellValue("金额");
+
+            cell = row.GetCell(7);
+            cell.SetCellValue("名称");
+            cell = row.GetCell(8);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(9);
+            cell.SetCellValue("金额");
+
+            cell = row.GetCell(10);
+            cell.SetCellValue("姓名");
+            cell = row.GetCell(11);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(12);
+            cell.SetCellValue("金额");
+            #endregion 
+            #region 合并表头第一行
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 0, 6));
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 7, 9));
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 10, 12));
+            #endregion
+            System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
+            string excelFile = Application.StartupPath + "//Excel//m_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            FileStream stream = File.OpenWrite(excelFile); ;
+            workBook.Write(stream);
+            stream.Close();
+            MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void Excel_n_total(List<s_n_total> n)
+        {
+            DataTable dt = new DataTable();
+            dt.Columns.Add("科室", System.Type.GetType("System.String"));
+            dt.Columns.Add("项目", System.Type.GetType("System.String"));
+            dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("部门", System.Type.GetType("System.String"));
+            dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("医师", System.Type.GetType("System.String"));
+            dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
+            foreach (s_n_total item in n)
+            {
+                dt.Rows.Add(item.科名, item.项目名称, Convert.ToInt32(item.sl_t3), item.je_t3, item.部门名称, Convert.ToInt32(item.sl_t4), item.je_t4, item.医师名称, Convert.ToInt32(item.sl_t5), item.je_t5);
+            }
+            IWorkbook workBook = new HSSFWorkbook();
+            workBook = ExcelHelper.ToExcel(dt, "诊疗分类汇总");
+
+            ISheet sheet1 = workBook.GetSheetAt(0);
+            sheet1.SetColumnWidth(0, 20 * 256);     //科名
+            sheet1.SetColumnWidth(1, 50 * 256);     //项目名称
+            sheet1.SetColumnWidth(2, 12 * 256);     //数量
+            sheet1.SetColumnWidth(3, 12 * 256);     //金额
+            sheet1.SetColumnWidth(4, 20 * 256);     //部门
+            sheet1.SetColumnWidth(5, 12 * 256);     //数量
+            sheet1.SetColumnWidth(6, 12 * 256);     //金额
+            sheet1.SetColumnWidth(7, 12 * 256);     //医师
+            sheet1.SetColumnWidth(8, 12 * 256);     //数量
+            sheet1.SetColumnWidth(9, 12 * 256);     //金额
+
+
+            //整理表头 
+            IRow row;
+            ICell cell;
+            ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
+            #region 第一行
+            row = sheet1.GetRow(1);
+            cell = row.GetCell(0);
+            cell.SetCellValue("科室：" + Department.Text + " 日期范围：" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + " ~ " + this.dateTimePicker2.Value.ToString("yyyy-MM-dd"));
+            #endregion
+            #region 第二行
+            row = sheet1.GetRow(2);
+            cell = row.GetCell(0);
+            cell.SetCellValue("科名");
+            cell = row.GetCell(1);
+            cell.SetCellValue("项目");
+            cell = row.GetCell(2);
+            cell.SetCellValue("项目");
+            cell = row.GetCell(3);
+            cell.SetCellValue("项目");
+
+            cell = row.GetCell(4);
+            cell.SetCellValue("部门");
+            cell = row.GetCell(5);
+            cell.SetCellValue("部门");
+            cell = row.GetCell(6);
+            cell.SetCellValue("部门");
+
+            cell = row.GetCell(7);
+            cell.SetCellValue("医师");
+            cell = row.GetCell(8);
+            cell.SetCellValue("医师");
+            cell = row.GetCell(9);
+            cell.SetCellValue("医师");
+            #endregion 
+            #region 第三行
+            row = sheet1.GetRow(3);
+            cell = row.GetCell(0);
+            cell.SetCellValue("科名");
+
+            cell = row.GetCell(1);
+            cell.SetCellValue("名称");
+            cell = row.GetCell(2);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(3);
+            cell.SetCellValue("金额");
+
+            cell = row.GetCell(4);
+            cell.SetCellValue("名称");
+            cell = row.GetCell(5);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(6);
+            cell.SetCellValue("金额");
+
+            cell = row.GetCell(7);
+            cell.SetCellValue("姓名");
+            cell = row.GetCell(8);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(9);
+            cell.SetCellValue("金额");
+            #endregion 
+            #region 合并表头第一行
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 3, 0, 0));
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 1, 3));
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 4, 6));
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 7, 9));
+            #endregion
+
+
+            #region 正文合并
+
+            int start = 0;      //记录同组开始行号
+            int end = 0;        //记录同组结束行号
+            string temp = "";
+            for (int j = 0; j < 8; j++)
+            {
+                start = 4;  //记录同组开始行号
+                end = 4;    //记录同组结束行号
+
+                for (int i = 0; i <  n.Count; i++)
+                {
+                    row = sheet1.GetRow(i + 4);
+                    cell = row.GetCell(j);
+                    var cellText = cell.StringCellValue;
+
+
+
+
+                    if (cellText == temp)       //上下行相等，记录要合并的最后一行
+                    {
+                        end = i + 4;
+                    }
+                    else//上下行不等，记录
+                    {
+                        if (start != end)
+                        {
+                            CellRangeAddress region = new CellRangeAddress(start, end, j, j);
+                            sheet1.AddMergedRegion(region);
+                        }
+                        start = i + 4;
+                        end = i + 4;
+                        temp = cellText;
+                    }
+                }
+            }
+
+            #endregion 
+            System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
+            string excelFile = Application.StartupPath + "//Excel//n_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            FileStream stream = File.OpenWrite(excelFile); ;
+            workBook.Write(stream);
+            stream.Close();
+            MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         private string GetAppSettings()
@@ -260,7 +536,7 @@ namespace FCfwz
             return Ret;
         }
 
-        public static SqlConnection GetSqlConnection(string SQL_Name, string SQL_DataBase, string SQL_ID, string SQL_PassWord,int Timeout = 20)
+        public static SqlConnection GetSqlConnection(string SQL_Name, string SQL_DataBase, string SQL_ID, string SQL_PassWord, int Timeout = 20)
         {
             string ConnectionString = string.Format("" +
                                 "Server = {0}; " +
@@ -296,9 +572,9 @@ namespace FCfwz
                         ComboBoxItem model = new ComboBoxItem();
 
                         if (dr["部门编码"] != DBNull.Value)
-                            model.Value = Convert.ToString(dr["部门编码"]);
+                            model.Value = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value)
-                            model.Text = Convert.ToString(dr["部门名称"]);
+                            model.Text = Convert.ToString(dr["部门名称"]).Trim();
                         Department.Add(model);
                     }
                 }
@@ -309,7 +585,6 @@ namespace FCfwz
             }
             return Department;
         }
-        
 
         private List<s_m_total> Get_m_total()
         {
@@ -322,7 +597,7 @@ namespace FCfwz
             }
             if (MySQLServer.SelfConn == true)
             {
-                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord,200))
+                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 1000))
                 {
                     string t = "1";
                     string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
@@ -354,11 +629,11 @@ namespace FCfwz
                         {
                             conn.Close();
                         }
-                    } 
+                    }
 
                     foreach (DataRow dr in dt.Rows)
                     {
-                        s_m_total model = new s_m_total(); 
+                        s_m_total model = new s_m_total();
                         if (dr["类码"] != DBNull.Value) model.类码 = Convert.ToString(dr["类码"]).Trim();
                         if (dr["类名"] != DBNull.Value) model.类名 = Convert.ToString(dr["类名"]).Trim();
                         if (dr["药品编码"] != DBNull.Value) model.药品编码 = Convert.ToString(dr["药品编码"]).Trim();
@@ -367,17 +642,17 @@ namespace FCfwz
                         if (dr["单位"] != DBNull.Value) model.单位 = Convert.ToString(dr["单位"]).Trim();
                         if (dr["单价"] != DBNull.Value) model.单价 = Convert.ToDecimal(dr["单价"]);
                         if (dr["sl_t3"] != DBNull.Value) model.sl_t3 = Convert.ToDecimal(dr["sl_t3"]);
-                        if (dr["je_t3"] != DBNull.Value) model.je_t3 = Convert.ToDecimal(dr["je_t3"]); 
+                        if (dr["je_t3"] != DBNull.Value) model.je_t3 = Convert.ToDecimal(dr["je_t3"]);
                         if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
                         if (dr["sl_t4"] != DBNull.Value) model.sl_t4 = Convert.ToDecimal(dr["sl_t4"]);
-                        if (dr["je_t4"] != DBNull.Value) model.je_t4 = Convert.ToDecimal(dr["je_t4"]); 
+                        if (dr["je_t4"] != DBNull.Value) model.je_t4 = Convert.ToDecimal(dr["je_t4"]);
                         if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
                         if (dr["sl_t5"] != DBNull.Value) model.sl_t5 = Convert.ToDecimal(dr["sl_t5"]);
-                        if (dr["je_t5"] != DBNull.Value) model.je_t5 = Convert.ToDecimal(dr["je_t5"]); 
+                        if (dr["je_t5"] != DBNull.Value) model.je_t5 = Convert.ToDecimal(dr["je_t5"]);
                         m_total.Add(model);
-                    } 
+                    }
                 }
             }
             else
@@ -386,21 +661,21 @@ namespace FCfwz
             }
             return m_total;
         }
- 
+
         private List<s_n_total> Get_n_total()
         {
 
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
 
 
-            List <s_n_total> n_total = new List<s_n_total>();
+            List<s_n_total> n_total = new List<s_n_total>();
             if (MySQLServer.SelfConn == false)
             {
                 MySQLServer.TestConnection();
             }
             if (MySQLServer.SelfConn == true)
-            { 
-                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 200))
+            {
+                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 1000))
                 {
                     string t = "1";
                     string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
@@ -432,27 +707,27 @@ namespace FCfwz
                         {
                             conn.Close();
                         }
-                    }  
+                    }
                     foreach (DataRow dr in dt.Rows)
                     {
-                        s_n_total model = new s_n_total(); 
+                        s_n_total model = new s_n_total();
                         if (dr["科码"] != DBNull.Value) model.科码 = Convert.ToString(dr["科码"]).Trim();
                         if (dr["科名"] != DBNull.Value) model.科名 = Convert.ToString(dr["科名"]).Trim();
                         if (dr["项目编码"] != DBNull.Value) model.项目编码 = Convert.ToString(dr["项目编码"]).Trim();
                         if (dr["项目名称"] != DBNull.Value) model.项目名称 = Convert.ToString(dr["项目名称"]).Trim();
                         if (dr["sl_t3"] != DBNull.Value) model.sl_t3 = Convert.ToDecimal(dr["sl_t3"]);
-                        if (dr["je_t3"] != DBNull.Value) model.je_t3 = Convert.ToDecimal(dr["je_t3"]); 
+                        if (dr["je_t3"] != DBNull.Value) model.je_t3 = Convert.ToDecimal(dr["je_t3"]);
                         if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
                         if (dr["sl_t4"] != DBNull.Value) model.sl_t4 = Convert.ToDecimal(dr["sl_t4"]);
-                        if (dr["je_t4"] != DBNull.Value) model.je_t4 = Convert.ToDecimal(dr["je_t4"]); 
+                        if (dr["je_t4"] != DBNull.Value) model.je_t4 = Convert.ToDecimal(dr["je_t4"]);
                         if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
                         if (dr["sl_t5"] != DBNull.Value) model.sl_t5 = Convert.ToDecimal(dr["sl_t5"]);
-                        if (dr["je_t5"] != DBNull.Value) model.je_t5 = Convert.ToDecimal(dr["je_t5"]); 
+                        if (dr["je_t5"] != DBNull.Value) model.je_t5 = Convert.ToDecimal(dr["je_t5"]);
                         n_total.Add(model);
                     }
-                } 
+                }
             }
             else
             {
