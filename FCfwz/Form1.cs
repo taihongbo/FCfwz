@@ -310,6 +310,7 @@ namespace FCfwz
             return Department;
         }
         
+
         private List<s_m_total> Get_m_total()
         {
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
