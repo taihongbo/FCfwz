@@ -342,7 +342,7 @@ namespace FCfwz
 
             #endregion 
             System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
-            string excelFile = Application.StartupPath + "//Excel//m_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            string excelFile = Application.StartupPath + "//Excel//药品_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
             FileStream stream = File.OpenWrite(excelFile); ;
             workBook.Write(stream);
             stream.Close();
@@ -495,7 +495,7 @@ namespace FCfwz
 
             #endregion 
             System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
-            string excelFile = Application.StartupPath + "//Excel//n_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            string excelFile = Application.StartupPath + "//Excel//诊疗_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
             FileStream stream = File.OpenWrite(excelFile); ;
             workBook.Write(stream);
             stream.Close();
