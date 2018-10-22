@@ -199,15 +199,18 @@ namespace FCfwz
             dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
             foreach (s_m_total item in m)
             {
-                dt.Rows.Add(item.类名, item.药品名称, item.规格, item.单位, item.单价, Convert.ToInt32(item.sl_t3), item.je_t3, item.部门名称, Convert.ToInt32(item.sl_t4), item.je_t4, item.医师名称, Convert.ToInt32(item.sl_t5), item.je_t5);
+                dt.Rows.Add(item.类名, item.药品名称, item.规格, item.单位, item.单价,
+                            Convert.ToInt32(item.数量), item.金额,
+                            item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
+                            item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
             }
             IWorkbook workBook = new HSSFWorkbook();
             workBook = ExcelHelper.ToExcel(dt, "药品分类汇总");
 
             ISheet sheet1 = workBook.GetSheetAt(0);
             sheet1.SetColumnWidth(0, 20 * 256);     //类名
-            sheet1.SetColumnWidth(1, 50 * 256);     //药品名称
-            sheet1.SetColumnWidth(2, 10 * 256);     //规格
+            sheet1.SetColumnWidth(1, 30 * 256);     //药品名称
+            sheet1.SetColumnWidth(2, 15 * 256);     //规格
             sheet1.SetColumnWidth(3, 6 * 256);      //单位
             sheet1.SetColumnWidth(4, 12 * 256);     //单价
             sheet1.SetColumnWidth(5, 12 * 256);     //数量
@@ -295,6 +298,49 @@ namespace FCfwz
             sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 7, 9));
             sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 10, 12));
             #endregion
+            #region 正文合并
+
+            int start = 0;      //记录同组开始行号
+            int end = 0;        //记录同组结束行号
+            string temp = "";
+            for (int j = 0; j < 12; j++)
+            {
+                start = 4;  //记录同组开始行号
+                end = 4;    //记录同组结束行号
+
+                for (int i = 0; i < m.Count  ; i++)
+                {
+                    row = sheet1.GetRow(i + 4);
+                    cell = row.GetCell(j);
+                    var cellText = "";
+                    for (int l = 0; l < j + 1; l++)
+                    {
+                        cellText = cellText + row.GetCell(l).StringCellValue;
+                    } 
+                    if (cellText == temp)       //上下行相等，记录要合并的最后一行
+                    {
+                        end = i + 4;
+                    }
+                    else//上下行不等，记录
+                    {
+                        if (start != end)
+                        {
+                            CellRangeAddress region = new CellRangeAddress(start, end, j, j);
+                            sheet1.AddMergedRegion(region);
+                        }
+                        start = i + 4;
+                        end = i + 4;
+                        temp = cellText;
+                    }
+                }
+                if (start != end)
+                {
+                    CellRangeAddress region = new CellRangeAddress(start, end, j, j);
+                    sheet1.AddMergedRegion(region);
+                }
+            }
+
+            #endregion 
             System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
             string excelFile = Application.StartupPath + "//Excel//m_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
             FileStream stream = File.OpenWrite(excelFile); ;
@@ -318,7 +364,9 @@ namespace FCfwz
             dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
             foreach (s_n_total item in n)
             {
-                dt.Rows.Add(item.科名, item.项目名称, Convert.ToInt32(item.sl_t3), item.je_t3, item.部门名称, Convert.ToInt32(item.sl_t4), item.je_t4, item.医师名称, Convert.ToInt32(item.sl_t5), item.je_t5);
+                dt.Rows.Add(item.科名, item.项目名称, Convert.ToInt32(item.数量), item.金额,
+                            item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
+                            item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
             }
             IWorkbook workBook = new HSSFWorkbook();
             workBook = ExcelHelper.ToExcel(dt, "诊疗分类汇总");
@@ -402,8 +450,6 @@ namespace FCfwz
             sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 4, 6));
             sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 7, 9));
             #endregion
-
-
             #region 正文合并
 
             int start = 0;      //记录同组开始行号
@@ -414,14 +460,15 @@ namespace FCfwz
                 start = 4;  //记录同组开始行号
                 end = 4;    //记录同组结束行号
 
-                for (int i = 0; i <  n.Count; i++)
+                for (int i = 0; i < n.Count  ; i++)
                 {
                     row = sheet1.GetRow(i + 4);
                     cell = row.GetCell(j);
-                    var cellText = cell.StringCellValue;
-
-
-
+                    var cellText = "";
+                    for (int l = 0; l < j + 1; l++)
+                    {
+                        cellText = cellText + row.GetCell(l).StringCellValue;
+                    }
 
                     if (cellText == temp)       //上下行相等，记录要合并的最后一行
                     {
@@ -438,6 +485,11 @@ namespace FCfwz
                         end = i + 4;
                         temp = cellText;
                     }
+                }
+                if (start != end)
+                {
+                    CellRangeAddress region = new CellRangeAddress(start, end, j, j);
+                    sheet1.AddMergedRegion(region);
                 }
             }
 
@@ -641,16 +693,16 @@ namespace FCfwz
                         if (dr["规格"] != DBNull.Value) model.规格 = Convert.ToString(dr["规格"]).Trim();
                         if (dr["单位"] != DBNull.Value) model.单位 = Convert.ToString(dr["单位"]).Trim();
                         if (dr["单价"] != DBNull.Value) model.单价 = Convert.ToDecimal(dr["单价"]);
-                        if (dr["sl_t3"] != DBNull.Value) model.sl_t3 = Convert.ToDecimal(dr["sl_t3"]);
-                        if (dr["je_t3"] != DBNull.Value) model.je_t3 = Convert.ToDecimal(dr["je_t3"]);
+                        if (dr["sl_t3"] != DBNull.Value) model.数量 = Convert.ToDecimal(dr["sl_t3"]);
+                        if (dr["je_t3"] != DBNull.Value) model.金额 = Convert.ToDecimal(dr["je_t3"]);
                         if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t4"] != DBNull.Value) model.sl_t4 = Convert.ToDecimal(dr["sl_t4"]);
-                        if (dr["je_t4"] != DBNull.Value) model.je_t4 = Convert.ToDecimal(dr["je_t4"]);
+                        if (dr["sl_t4"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["sl_t4"]);
+                        if (dr["je_t4"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["je_t4"]);
                         if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t5"] != DBNull.Value) model.sl_t5 = Convert.ToDecimal(dr["sl_t5"]);
-                        if (dr["je_t5"] != DBNull.Value) model.je_t5 = Convert.ToDecimal(dr["je_t5"]);
+                        if (dr["sl_t5"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["sl_t5"]);
+                        if (dr["je_t5"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["je_t5"]);
                         m_total.Add(model);
                     }
                 }
@@ -715,16 +767,16 @@ namespace FCfwz
                         if (dr["科名"] != DBNull.Value) model.科名 = Convert.ToString(dr["科名"]).Trim();
                         if (dr["项目编码"] != DBNull.Value) model.项目编码 = Convert.ToString(dr["项目编码"]).Trim();
                         if (dr["项目名称"] != DBNull.Value) model.项目名称 = Convert.ToString(dr["项目名称"]).Trim();
-                        if (dr["sl_t3"] != DBNull.Value) model.sl_t3 = Convert.ToDecimal(dr["sl_t3"]);
-                        if (dr["je_t3"] != DBNull.Value) model.je_t3 = Convert.ToDecimal(dr["je_t3"]);
+                        if (dr["sl_t3"] != DBNull.Value) model.数量 = Convert.ToDecimal(dr["sl_t3"]);
+                        if (dr["je_t3"] != DBNull.Value) model.金额 = Convert.ToDecimal(dr["je_t3"]);
                         if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t4"] != DBNull.Value) model.sl_t4 = Convert.ToDecimal(dr["sl_t4"]);
-                        if (dr["je_t4"] != DBNull.Value) model.je_t4 = Convert.ToDecimal(dr["je_t4"]);
+                        if (dr["sl_t4"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["sl_t4"]);
+                        if (dr["je_t4"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["je_t4"]);
                         if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t5"] != DBNull.Value) model.sl_t5 = Convert.ToDecimal(dr["sl_t5"]);
-                        if (dr["je_t5"] != DBNull.Value) model.je_t5 = Convert.ToDecimal(dr["je_t5"]);
+                        if (dr["sl_t5"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["sl_t5"]);
+                        if (dr["je_t5"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["je_t5"]);
                         n_total.Add(model);
                     }
                 }
@@ -807,16 +859,16 @@ namespace FCfwz
         public string 规格 { set; get; }
         public string 单位 { set; get; }
         public decimal 单价 { set; get; }
-        public decimal sl_t3 { set; get; }
-        public decimal je_t3 { set; get; }
+        public decimal 数量 { set; get; }
+        public decimal 金额 { set; get; }
         public string 部门编码 { set; get; }
         public string 部门名称 { set; get; }
-        public decimal sl_t4 { set; get; }
-        public decimal je_t4 { set; get; }
+        public decimal 部门数量 { set; get; }
+        public decimal 部门金额 { set; get; }
         public string 医师编码 { set; get; }
         public string 医师名称 { set; get; }
-        public decimal sl_t5 { set; get; }
-        public decimal je_t5 { set; get; }
+        public decimal 医师数量 { set; get; }
+        public decimal 医师金额 { set; get; }
     }
     public class s_n_total
     {
@@ -824,16 +876,16 @@ namespace FCfwz
         public string 科名 { set; get; }
         public string 项目编码 { set; get; }
         public string 项目名称 { set; get; }
-        public decimal sl_t3 { set; get; }
-        public decimal je_t3 { set; get; }
+        public decimal 数量 { set; get; }
+        public decimal 金额 { set; get; }
         public string 部门编码 { set; get; }
         public string 部门名称 { set; get; }
-        public decimal sl_t4 { set; get; }
-        public decimal je_t4 { set; get; }
+        public decimal 部门数量 { set; get; }
+        public decimal 部门金额 { set; get; }
         public string 医师编码 { set; get; }
         public string 医师名称 { set; get; }
-        public decimal sl_t5 { set; get; }
-        public decimal je_t5 { set; get; }
+        public decimal 医师数量 { set; get; }
+        public decimal 医师金额 { set; get; }
     }
 
 

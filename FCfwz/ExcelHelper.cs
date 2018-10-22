@@ -13,9 +13,48 @@ namespace FCfwz
         {
 
             IWorkbook workBook = new HSSFWorkbook();
-            ISheet sheet = workBook.CreateSheet("Sheet1"); 
+            ISheet sheet = workBook.CreateSheet("Sheet1");
 
             sheet.DefaultRowHeightInPoints = 20;
+
+            #region 对齐方式
+            HSSFFont FontDefault = (HSSFFont)workBook.CreateFont();
+            FontDefault.FontName = "宋体";
+            FontDefault.IsBold =false;
+            FontDefault.FontHeightInPoints = 10; 
+
+            ICellStyle styleCenter = workBook.CreateCellStyle(); 
+            styleCenter.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleCenter.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleCenter.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleCenter.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin; 
+            styleCenter.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Center;
+            styleCenter.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center; 
+            styleCenter.ShrinkToFit = false;
+            styleCenter.SetFont(FontDefault);
+
+
+            ICellStyle styleLeft = workBook.CreateCellStyle();
+            styleLeft.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleLeft.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleLeft.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleLeft.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleLeft.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Left;
+            styleLeft.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+            styleLeft.ShrinkToFit = false;
+            styleLeft.SetFont(FontDefault);
+
+
+            ICellStyle styleRight = workBook.CreateCellStyle();
+            styleRight.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleRight.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleRight.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleRight.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
+            styleRight.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Right;
+            styleRight.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
+            styleRight.ShrinkToFit = false;
+            styleRight.SetFont(FontDefault);
+            #endregion
 
             HSSFFont fontX = (HSSFFont)workBook.CreateFont();
             fontX.FontName = "宋体";
@@ -36,7 +75,7 @@ namespace FCfwz
             //缩小字体填充  
 
             styleX.ShrinkToFit = false;
-            styleX.SetFont(fontX);
+            styleX.SetFont(fontX);  
 
             HSSFFont fontY = (HSSFFont)workBook.CreateFont();
             fontY.FontName = "宋体";
@@ -55,23 +94,7 @@ namespace FCfwz
             //cellStyle.WrapText = true;  
             //缩小字体填充  
             styleY.SetFont(fontY);
-            styleY.ShrinkToFit = false;
-
-
-            ICellStyle styleZ = workBook.CreateCellStyle();
-            //设置单元格上下左右边框线  
-            styleZ.BorderTop = NPOI.SS.UserModel.BorderStyle.Thin;
-            styleZ.BorderBottom = NPOI.SS.UserModel.BorderStyle.Thin;
-            styleZ.BorderLeft = NPOI.SS.UserModel.BorderStyle.Thin;
-            styleZ.BorderRight = NPOI.SS.UserModel.BorderStyle.Thin;
-            //文字水平和垂直对齐方式  
-            styleZ.Alignment = NPOI.SS.UserModel.HorizontalAlignment.Right;
-            styleZ.VerticalAlignment = NPOI.SS.UserModel.VerticalAlignment.Center;
-            //是否换行  
-            //cellStyle.WrapText = true;  
-            //缩小字体填充  
-            styleZ.SetFont(fontY);
-            styleZ.ShrinkToFit = false; 
+            styleY.ShrinkToFit = false; 
 
 
             ICellStyle cellStyleZ = workBook.CreateCellStyle();
@@ -103,14 +126,14 @@ namespace FCfwz
             for (int i = 0; i < table.Columns.Count; i++)
             {
                 row.CreateCell(i).SetCellValue(table.Columns[i].ColumnName);
-                row.Cells[i].CellStyle = styleX; 
+                row.Cells[i].CellStyle = styleX;
             }
             row = sheet.CreateRow(3);
             row.HeightInPoints = 20;//行高  
             for (int i = 0; i < table.Columns.Count; i++)
             {
                 row.CreateCell(i).SetCellValue(table.Columns[i].ColumnName);
-                row.Cells[i].CellStyle = styleX; 
+                row.Cells[i].CellStyle = styleX;
             }
 
             //处理数据内容
@@ -121,23 +144,34 @@ namespace FCfwz
                 for (int j = 0; j < table.Columns.Count; j++)
                 {
                     DataColumn dc = table.Columns[j];
-                    if (dc.DataType == System.Type.GetType("System.Decimal"))
+                    if (dc.ColumnName == "单位")
                     {
-                        row.CreateCell(j).SetCellValue(Convert.ToDecimal(table.Rows[i][j]).ToString("f2"));
-                        row.Cells[j].CellStyle = styleZ;
+                        row.CreateCell(j).SetCellValue(table.Rows[i][j].ToString());
+                        row.Cells[j].CellStyle = styleCenter;
                     }
-                    else if (dc.DataType == System.Type.GetType("System.Int32"))
+                    else if (dc.ColumnName.IndexOf("数量")>0)
                     {
-                        row.CreateCell(j).SetCellValue(Convert.ToDecimal(table.Rows[i][j]).ToString("f0"));
-                        row.Cells[j].CellStyle = styleZ; ;
+                        row.CreateCell(j).SetCellValue(table.Rows[i][j].ToString());
+                        row.Cells[j].CellStyle = styleCenter;
                     }
                     else
                     {
-                        row.CreateCell(j).SetCellValue(table.Rows[i][j].ToString());
-                        row.Cells[j].CellStyle = styleY;
-                    }
-
-                    //sheet.AutoSizeColumn(j);
+                        if (dc.DataType == System.Type.GetType("System.Decimal"))
+                        {
+                            row.CreateCell(j).SetCellValue(Convert.ToDecimal(table.Rows[i][j]).ToString("f2"));
+                            row.Cells[j].CellStyle = styleRight;
+                        }
+                        else if (dc.DataType == System.Type.GetType("System.Int32"))
+                        {
+                            row.CreateCell(j).SetCellValue(Convert.ToDecimal(table.Rows[i][j]).ToString("f0"));
+                            row.Cells[j].CellStyle = styleRight; ;
+                        }
+                        else
+                        {
+                            row.CreateCell(j).SetCellValue(table.Rows[i][j].ToString());
+                            row.Cells[j].CellStyle = styleLeft;
+                        }
+                    } 
                 }
             }
 
