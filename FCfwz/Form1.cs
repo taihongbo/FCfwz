@@ -48,7 +48,6 @@ namespace FCfwz
                 this.textBox2.Text = "";
                 this.textBox3.Text = "";
                 this.textBox4.Text = "";
-                MessageBox.Show(ret, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             MySQLServer.SelfConn = false;
             MySQLServer.TestConnection();
@@ -68,20 +67,20 @@ namespace FCfwz
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            this.splitContainer1.SplitterDistance = 300;
+            this.splitContainer1.SplitterDistance = 400;
         }
         private void button1_Click(object sender, EventArgs e)
         {
-            if (this.splitContainer1.SplitterDistance == 300)
+            if (this.splitContainer1.SplitterDistance == 400)
             {
-                this.splitContainer1.SplitterDistance = 30;
+                this.splitContainer1.SplitterDistance = 50;
                 this.button1.Text = ">>";
                 this.groupBox1.Visible = false;
                 this.groupBox2.Visible = false;
             }
             else
             {
-                this.splitContainer1.SplitterDistance = 300;
+                this.splitContainer1.SplitterDistance = 400;
                 this.button1.Text = "配置项设置，单击可以隐藏";
                 this.groupBox1.Visible = true;
                 this.groupBox2.Visible = true;
@@ -95,7 +94,7 @@ namespace FCfwz
 
         private void button1_MouseEnter(object sender, EventArgs e)
         {
-            if (this.splitContainer1.SplitterDistance == 30)
+            if (this.splitContainer1.SplitterDistance == 50)
             {
                 this.toolTip1.IsBalloon = false;
                 this.toolTip1.UseFading = true;
@@ -132,52 +131,74 @@ namespace FCfwz
             MySQLServer.SQL_ID = this.textBox2.Text;
             MySQLServer.SQL_PassWord = this.textBox3.Text;
             MySQLServer.SQL_DataBase = this.textBox4.Text;
-            string ret = SetAppSettings();
-            if (ret != "")
+            if (MySQLServer.SQL_Name == "" || MySQLServer.SQL_ID == "" || MySQLServer.SQL_DataBase == "")
             {
-                MessageBox.Show(ret, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("请填写准确的参数，测试通过后再保存！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else
             {
-                MessageBox.Show("配置信息保存成功！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                string ret = SetAppSettings();
+                if (ret != "")
+                {
+                    MessageBox.Show(ret, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    MessageBox.Show("配置信息保存成功！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                }
             }
         }
         //查询
         private void button4_Click(object sender, EventArgs e)
         {
-            List<s_m_total> m = new List<s_m_total>();
-            List<s_n_total> n = new List<s_n_total>();
-
-            if (this.radioButton1.Checked == true)
+            if (MySQLServer.SelfConn == true)
             {
-                m = Get_m_total();
-                this.dataGridView1.DataSource = null;
-                this.dataGridView1.DataSource = m;
+                List<s_m_total> m = new List<s_m_total>();
+                List<s_n_total> n = new List<s_n_total>();
+
+                if (this.radioButton1.Checked == true)
+                {
+                    m = Get_m_total();
+                    this.dataGridView1.DataSource = null;
+                    this.dataGridView1.DataSource = m;
+                }
+
+                if (this.radioButton2.Checked == true)
+                {
+                    n = Get_n_total();
+                    this.dataGridView1.DataSource = null;
+                    this.dataGridView1.DataSource = n;
+                }
             }
-
-            if (this.radioButton2.Checked == true)
+            else
             {
-                n = Get_n_total();
-                this.dataGridView1.DataSource = null;
-                this.dataGridView1.DataSource = n;
+                MessageBox.Show("远程数据库连接失败！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             }
         }
         //导出
         private void button5_Click(object sender, EventArgs e)
         {
-            List<s_m_total> m = new List<s_m_total>();
-            List<s_n_total> n = new List<s_n_total>();
-
-            if (this.radioButton1.Checked == true)
+            if (MySQLServer.SelfConn == true)
             {
-                m = Get_m_total();
-                Excel_m_total(m);
+                List<s_m_total> m = new List<s_m_total>();
+                List<s_n_total> n = new List<s_n_total>();
+
+                if (this.radioButton1.Checked == true)
+                {
+                    m = Get_m_total();
+                    Excel_m_total(m);
+                }
+
+                if (this.radioButton2.Checked == true)
+                {
+                    n = Get_n_total();
+                    Excel_n_total(n);
+                }
             }
-
-            if (this.radioButton2.Checked == true)
+            else
             {
-                n = Get_n_total();
-                Excel_n_total(n);
+                MessageBox.Show("远程数据库连接失败！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -205,7 +226,7 @@ namespace FCfwz
                             item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
             }
             IWorkbook workBook = new HSSFWorkbook();
-            workBook = ExcelHelper.ToExcel(dt, "药品分类汇总");
+            workBook = ExcelHelper.ToExcel(dt, "肥城市妇幼保健院药品销售分类明细");
 
             ISheet sheet1 = workBook.GetSheetAt(0);
             sheet1.SetColumnWidth(0, 20 * 256);     //类名
@@ -308,7 +329,7 @@ namespace FCfwz
                 start = 4;  //记录同组开始行号
                 end = 4;    //记录同组结束行号
 
-                for (int i = 0; i < m.Count  ; i++)
+                for (int i = 0; i < m.Count; i++)
                 {
                     row = sheet1.GetRow(i + 4);
                     cell = row.GetCell(j);
@@ -316,7 +337,7 @@ namespace FCfwz
                     for (int l = 0; l < j + 1; l++)
                     {
                         cellText = cellText + row.GetCell(l).StringCellValue;
-                    } 
+                    }
                     if (cellText == temp)       //上下行相等，记录要合并的最后一行
                     {
                         end = i + 4;
@@ -341,8 +362,8 @@ namespace FCfwz
             }
 
             #endregion 
-            System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
-            string excelFile = Application.StartupPath + "//Excel//药品_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            System.IO.Directory.CreateDirectory(Application.StartupPath + @"\Excel");
+            string excelFile = Application.StartupPath + @"\Excel\药品_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
             FileStream stream = File.OpenWrite(excelFile); ;
             workBook.Write(stream);
             stream.Close();
@@ -369,7 +390,7 @@ namespace FCfwz
                             item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
             }
             IWorkbook workBook = new HSSFWorkbook();
-            workBook = ExcelHelper.ToExcel(dt, "诊疗分类汇总");
+            workBook = ExcelHelper.ToExcel(dt, "肥城市妇幼保健院诊疗项目分类明细");
 
             ISheet sheet1 = workBook.GetSheetAt(0);
             sheet1.SetColumnWidth(0, 20 * 256);     //科名
@@ -460,7 +481,7 @@ namespace FCfwz
                 start = 4;  //记录同组开始行号
                 end = 4;    //记录同组结束行号
 
-                for (int i = 0; i < n.Count  ; i++)
+                for (int i = 0; i < n.Count; i++)
                 {
                     row = sheet1.GetRow(i + 4);
                     cell = row.GetCell(j);
@@ -494,8 +515,8 @@ namespace FCfwz
             }
 
             #endregion 
-            System.IO.Directory.CreateDirectory(Application.StartupPath + "//Excel");
-            string excelFile = Application.StartupPath + "//Excel//诊疗_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            System.IO.Directory.CreateDirectory(Application.StartupPath + @"\Excel");
+            string excelFile = Application.StartupPath + @"\Excel\诊疗_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
             FileStream stream = File.OpenWrite(excelFile); ;
             workBook.Write(stream);
             stream.Close();
@@ -513,17 +534,36 @@ namespace FCfwz
                 {
                     MySQLServer.SQL_Name = config.AppSettings.Settings["SQL_Name"].Value;
                 }
+                else
+                {
+                    MySQLServer.SQL_Name = "";
+                }
+
                 if (config.AppSettings.Settings["SQL_ID"] != null)
                 {
                     MySQLServer.SQL_ID = config.AppSettings.Settings["SQL_ID"].Value;
                 }
+                else
+                {
+                    MySQLServer.SQL_ID = "";
+                }
+
                 if (config.AppSettings.Settings["SQL_PassWord"] != null)
                 {
                     MySQLServer.SQL_PassWord = config.AppSettings.Settings["SQL_PassWord"].Value;
                 }
+                else
+                {
+                    MySQLServer.SQL_PassWord = "";
+                }
+
                 if (config.AppSettings.Settings["SQL_DataBase"] != null)
                 {
                     MySQLServer.SQL_DataBase = config.AppSettings.Settings["SQL_DataBase"].Value;
+                }
+                else
+                {
+                    MySQLServer.SQL_DataBase = "";
                 }
             }
             catch (Exception ex)
@@ -588,7 +628,7 @@ namespace FCfwz
             return Ret;
         }
 
-        public static SqlConnection GetSqlConnection(string SQL_Name, string SQL_DataBase, string SQL_ID, string SQL_PassWord, int Timeout = 20)
+        public static SqlConnection GetSqlConnection(string SQL_Name, string SQL_DataBase, string SQL_ID, string SQL_PassWord, int Timeout = 10)
         {
             string ConnectionString = string.Format("" +
                                 "Server = {0}; " +
@@ -631,10 +671,7 @@ namespace FCfwz
                     }
                 }
             }
-            else
-            {
-                MessageBox.Show("远程数据库连接失败！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+
             return Department;
         }
 
@@ -649,7 +686,7 @@ namespace FCfwz
             }
             if (MySQLServer.SelfConn == true)
             {
-                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 1000))
+                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 5000))
                 {
                     string t = "1";
                     string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
@@ -727,7 +764,7 @@ namespace FCfwz
             }
             if (MySQLServer.SelfConn == true)
             {
-                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 1000))
+                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 5000))
                 {
                     string t = "1";
                     string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
@@ -791,13 +828,21 @@ namespace FCfwz
 
         private void button6_Click(object sender, EventArgs e)
         {
-            this.comboBox1.Items.Clear();
-            List<ComboBoxItem> Departments = GetAllDepartment();
-            foreach (ComboBoxItem Department in Departments)
+            if (MySQLServer.SelfConn == true)
             {
-                this.comboBox1.Items.Add(Department);
+                this.comboBox1.Items.Clear();
+                List<ComboBoxItem> Departments = GetAllDepartment();
+                foreach (ComboBoxItem Department in Departments)
+                {
+                    this.comboBox1.Items.Add(Department);
+                }
+                if (this.comboBox1.Items.Count > 0) { this.comboBox1.SelectedIndex = 0; }
+
             }
-            if (this.comboBox1.Items.Count > 0) { this.comboBox1.SelectedIndex = 0; }
+            else
+            {
+                MessageBox.Show("远程数据库连接失败！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
     public class SQLServer
@@ -821,7 +866,7 @@ namespace FCfwz
                                    "Initial Catalog = {1}; " +
                                    "User ID = {2}; " +
                                    "Password = {3}; " +
-                                   "max pool size = 800; min pool size = 300; Connect Timeout = 20",
+                                   "max pool size = 800; min pool size = 300; Connect Timeout = 10",
                                    SQL_Name, SQL_DataBase, SQL_ID, SQL_PassWord);
                 Connection.ConnectionString = ConnectionString;
                 try
