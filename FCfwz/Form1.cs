@@ -25,8 +25,7 @@ namespace FCfwz
         {
             InitializeComponent();
         }
-
-
+        
         private void Form1_Load(object sender, EventArgs e)
         {
 
@@ -202,7 +201,7 @@ namespace FCfwz
             }
         }
 
-        private void Excel_m_total(List<s_m_total> m)
+        public void Excel_m_total(List<s_m_total> m)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("类别", System.Type.GetType("System.String"));
@@ -370,7 +369,7 @@ namespace FCfwz
             MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private void Excel_n_total(List<s_n_total> n)
+        public void Excel_n_total(List<s_n_total> n)
         {
             DataTable dt = new DataTable();
             dt.Columns.Add("科室", System.Type.GetType("System.String"));
@@ -523,7 +522,7 @@ namespace FCfwz
             MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
-        private string GetAppSettings()
+        public string GetAppSettings()
         {
             string Ret = "";
             try
@@ -574,7 +573,7 @@ namespace FCfwz
             return Ret;
         }
 
-        private string SetAppSettings()
+        public string SetAppSettings()
         {
             string Ret = "";
             try
@@ -642,7 +641,7 @@ namespace FCfwz
             return conn;
         }
 
-        private List<ComboBoxItem> GetAllDepartment()
+        public List<ComboBoxItem> GetAllDepartment()
         {
             List<ComboBoxItem> Department = new List<ComboBoxItem>();
             Department.Add(new ComboBoxItem { Value = "", Text = "全部" });
@@ -675,7 +674,7 @@ namespace FCfwz
             return Department;
         }
 
-        private List<s_m_total> Get_m_total()
+        public List<s_m_total> Get_m_total()
         {
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
 
@@ -751,7 +750,7 @@ namespace FCfwz
             return m_total;
         }
 
-        private List<s_n_total> Get_n_total()
+        public List<s_n_total> Get_n_total()
         {
 
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
