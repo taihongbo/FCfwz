@@ -8,7 +8,6 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
 using NPOI.HSSF.UserModel;
@@ -729,16 +728,16 @@ namespace FCfwz
                         if (dr["规格"] != DBNull.Value) model.规格 = Convert.ToString(dr["规格"]).Trim();
                         if (dr["单位"] != DBNull.Value) model.单位 = Convert.ToString(dr["单位"]).Trim();
                         if (dr["单价"] != DBNull.Value) model.单价 = Convert.ToDecimal(dr["单价"]);
-                        if (dr["sl_t3"] != DBNull.Value) model.数量 = Convert.ToDecimal(dr["sl_t3"]);
-                        if (dr["je_t3"] != DBNull.Value) model.金额 = Convert.ToDecimal(dr["je_t3"]);
+                        if (dr["数量"] != DBNull.Value) model.数量 = Convert.ToDecimal(dr["数量"]);
+                        if (dr["金额"] != DBNull.Value) model.金额 = Convert.ToDecimal(dr["金额"]);
                         if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t4"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["sl_t4"]);
-                        if (dr["je_t4"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["je_t4"]);
+                        if (dr["部门数量"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["部门数量"]);
+                        if (dr["部门金额"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["部门金额"]);
                         if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t5"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["sl_t5"]);
-                        if (dr["je_t5"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["je_t5"]);
+                        if (dr["医师数量"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["医师数量"]);
+                        if (dr["医师金额"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["医师金额"]);
                         m_total.Add(model);
                     }
                 }
@@ -803,16 +802,16 @@ namespace FCfwz
                         if (dr["科名"] != DBNull.Value) model.科名 = Convert.ToString(dr["科名"]).Trim();
                         if (dr["项目编码"] != DBNull.Value) model.项目编码 = Convert.ToString(dr["项目编码"]).Trim();
                         if (dr["项目名称"] != DBNull.Value) model.项目名称 = Convert.ToString(dr["项目名称"]).Trim();
-                        if (dr["sl_t3"] != DBNull.Value) model.数量 = Convert.ToDecimal(dr["sl_t3"]);
-                        if (dr["je_t3"] != DBNull.Value) model.金额 = Convert.ToDecimal(dr["je_t3"]);
+                        if (dr["数量"] != DBNull.Value) model.数量 = Convert.ToDecimal(dr["数量"]);
+                        if (dr["金额"] != DBNull.Value) model.金额 = Convert.ToDecimal(dr["金额"]);
                         if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t4"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["sl_t4"]);
-                        if (dr["je_t4"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["je_t4"]);
+                        if (dr["部门数量"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["部门数量"]);
+                        if (dr["部门金额"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["部门金额"]);
                         if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
                         if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
-                        if (dr["sl_t5"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["sl_t5"]);
-                        if (dr["je_t5"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["je_t5"]);
+                        if (dr["医师数量"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["医师数量"]);
+                        if (dr["医师金额"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["医师金额"]);
                         n_total.Add(model);
                     }
                 }
