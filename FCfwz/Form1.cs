@@ -734,8 +734,8 @@ namespace FCfwz
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
                         if (dr["部门数量"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["部门数量"]);
                         if (dr["部门金额"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["部门金额"]);
-                        if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
-                        if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
+                        if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["医师编码"]).Trim();
+                        if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["医师名称"]).Trim();
                         if (dr["医师数量"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["医师数量"]);
                         if (dr["医师金额"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["医师金额"]);
                         m_total.Add(model);
@@ -808,8 +808,8 @@ namespace FCfwz
                         if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
                         if (dr["部门数量"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["部门数量"]);
                         if (dr["部门金额"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["部门金额"]);
-                        if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["部门编码"]).Trim();
-                        if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["部门名称"]).Trim();
+                        if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["医师编码"]).Trim();
+                        if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["医师名称"]).Trim();
                         if (dr["医师数量"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["医师数量"]);
                         if (dr["医师金额"] != DBNull.Value) model.医师金额 = Convert.ToDecimal(dr["医师金额"]);
                         n_total.Add(model);
