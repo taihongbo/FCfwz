@@ -40,7 +40,6 @@
             this.dateTimePicker2 = new System.Windows.Forms.DateTimePicker();
             this.dateTimePicker1 = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox4 = new System.Windows.Forms.TextBox();
@@ -55,12 +54,18 @@
             this.label1 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
-            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components); 
+            this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
+            this.radioButton2 = new System.Windows.Forms.RadioButton();
+            this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.comboBox2 = new System.Windows.Forms.ComboBox();
+            this.comboBox3 = new System.Windows.Forms.ComboBox();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
             this.groupBox2.SuspendLayout();
-            this.groupBox1.SuspendLayout(); 
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
+            this.groupBox3.SuspendLayout();
             this.SuspendLayout();
             // 
             // splitContainer1
@@ -74,6 +79,7 @@
             // splitContainer1.Panel1
             // 
             this.splitContainer1.Panel1.BackColor = System.Drawing.Color.White;
+            this.splitContainer1.Panel1.Controls.Add(this.groupBox3);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox2);
             this.splitContainer1.Panel1.Controls.Add(this.groupBox1);
             this.splitContainer1.Panel1.Controls.Add(this.button1);
@@ -82,7 +88,7 @@
             // 
             this.splitContainer1.Panel2.BackColor = System.Drawing.Color.White;
             this.splitContainer1.Panel2.Controls.Add(this.dataGridView1);
-            this.splitContainer1.Size = new System.Drawing.Size(1284, 662);
+            this.splitContainer1.Size = new System.Drawing.Size(1284, 754);
             this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.SplitterWidth = 5;
             this.splitContainer1.TabIndex = 0;
@@ -97,20 +103,18 @@
             this.groupBox2.Controls.Add(this.dateTimePicker2);
             this.groupBox2.Controls.Add(this.dateTimePicker1);
             this.groupBox2.Controls.Add(this.label5);
-            this.groupBox2.Controls.Add(this.radioButton2);
-            this.groupBox2.Controls.Add(this.radioButton1);
-            this.groupBox2.Location = new System.Drawing.Point(13, 364);
+            this.groupBox2.Location = new System.Drawing.Point(13, 462);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox2.Size = new System.Drawing.Size(365, 267);
+            this.groupBox2.Size = new System.Drawing.Size(365, 214);
             this.groupBox2.TabIndex = 2;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "查询条件";
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(37, 207);
+            this.button6.Location = new System.Drawing.Point(39, 163);
             this.button6.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(91, 38);
@@ -123,7 +127,7 @@
             // 
             this.comboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Location = new System.Drawing.Point(136, 73);
+            this.comboBox1.Location = new System.Drawing.Point(138, 29);
             this.comboBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.comboBox1.Name = "comboBox1";
             this.comboBox1.Size = new System.Drawing.Size(193, 28);
@@ -132,7 +136,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(44, 77);
+            this.label6.Location = new System.Drawing.Point(46, 33);
             this.label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(79, 20);
@@ -141,7 +145,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(136, 207);
+            this.button4.Location = new System.Drawing.Point(138, 163);
             this.button4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(91, 38);
@@ -152,7 +156,7 @@
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(240, 207);
+            this.button5.Location = new System.Drawing.Point(242, 163);
             this.button5.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(91, 38);
@@ -163,7 +167,7 @@
             // 
             // dateTimePicker2
             // 
-            this.dateTimePicker2.Location = new System.Drawing.Point(136, 162);
+            this.dateTimePicker2.Location = new System.Drawing.Point(138, 118);
             this.dateTimePicker2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dateTimePicker2.Name = "dateTimePicker2";
             this.dateTimePicker2.Size = new System.Drawing.Size(193, 26);
@@ -171,7 +175,7 @@
             // 
             // dateTimePicker1
             // 
-            this.dateTimePicker1.Location = new System.Drawing.Point(136, 117);
+            this.dateTimePicker1.Location = new System.Drawing.Point(138, 73);
             this.dateTimePicker1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dateTimePicker1.Name = "dateTimePicker1";
             this.dateTimePicker1.Size = new System.Drawing.Size(193, 26);
@@ -180,36 +184,21 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(44, 119);
+            this.label5.Location = new System.Drawing.Point(46, 75);
             this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(79, 20);
             this.label5.TabIndex = 9;
             this.label5.Text = "日期范围：";
             // 
-            // radioButton2
-            // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.radioButton2.ForeColor = System.Drawing.Color.Red;
-            this.radioButton2.Location = new System.Drawing.Point(240, -6);
-            this.radioButton2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(68, 29);
-            this.radioButton2.TabIndex = 1;
-            this.radioButton2.Text = "诊疗";
-            this.radioButton2.UseVisualStyleBackColor = true;
-            // 
             // radioButton1
             // 
             this.radioButton1.AutoSize = true;
             this.radioButton1.Checked = true;
-            this.radioButton1.Font = new System.Drawing.Font("微软雅黑", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.radioButton1.ForeColor = System.Drawing.Color.Red;
-            this.radioButton1.Location = new System.Drawing.Point(136, -5);
+            this.radioButton1.Location = new System.Drawing.Point(80, 45);
             this.radioButton1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(68, 29);
+            this.radioButton1.Size = new System.Drawing.Size(55, 24);
             this.radioButton1.TabIndex = 0;
             this.radioButton1.TabStop = true;
             this.radioButton1.Text = "药品";
@@ -231,14 +220,14 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4, 5, 4, 5);
-            this.groupBox1.Size = new System.Drawing.Size(365, 303);
+            this.groupBox1.Size = new System.Drawing.Size(365, 229);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "服务器";
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(136, 198);
+            this.textBox4.Location = new System.Drawing.Point(140, 137);
             this.textBox4.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox4.Name = "textBox4";
             this.textBox4.Size = new System.Drawing.Size(193, 26);
@@ -249,7 +238,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(28, 199);
+            this.label4.Location = new System.Drawing.Point(32, 138);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(93, 20);
@@ -258,7 +247,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(136, 243);
+            this.button3.Location = new System.Drawing.Point(138, 173);
             this.button3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(91, 38);
@@ -269,7 +258,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(240, 243);
+            this.button2.Location = new System.Drawing.Point(242, 173);
             this.button2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(91, 38);
@@ -280,7 +269,7 @@
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(136, 153);
+            this.textBox3.Location = new System.Drawing.Point(136, 101);
             this.textBox3.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox3.Name = "textBox3";
             this.textBox3.PasswordChar = '*';
@@ -292,7 +281,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(76, 154);
+            this.label3.Location = new System.Drawing.Point(76, 102);
             this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(51, 20);
@@ -301,7 +290,7 @@
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(136, 108);
+            this.textBox2.Location = new System.Drawing.Point(136, 65);
             this.textBox2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(193, 26);
@@ -312,7 +301,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(60, 109);
+            this.label2.Location = new System.Drawing.Point(60, 66);
             this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(65, 20);
@@ -321,7 +310,7 @@
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(136, 63);
+            this.textBox1.Location = new System.Drawing.Point(138, 29);
             this.textBox1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(193, 26);
@@ -332,7 +321,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(28, 64);
+            this.label1.Location = new System.Drawing.Point(30, 30);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 20);
@@ -362,18 +351,60 @@
             this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowTemplate.Height = 23;
-            this.dataGridView1.Size = new System.Drawing.Size(879, 662);
+            this.dataGridView1.Size = new System.Drawing.Size(879, 754);
             this.dataGridView1.TabIndex = 0;
             // 
             // toolTip1
             // 
             this.toolTip1.Popup += new System.Windows.Forms.PopupEventHandler(this.toolTip1_Popup);
             // 
+            // radioButton2
+            // 
+            this.radioButton2.AutoSize = true;
+            this.radioButton2.Location = new System.Drawing.Point(80, 92);
+            this.radioButton2.Margin = new System.Windows.Forms.Padding(4, 5, 4, 5);
+            this.radioButton2.Name = "radioButton2";
+            this.radioButton2.Size = new System.Drawing.Size(55, 24);
+            this.radioButton2.TabIndex = 1;
+            this.radioButton2.Text = "诊疗";
+            this.radioButton2.UseVisualStyleBackColor = true;
+            // 
+            // groupBox3
+            // 
+            this.groupBox3.Controls.Add(this.comboBox3);
+            this.groupBox3.Controls.Add(this.comboBox2);
+            this.groupBox3.Controls.Add(this.radioButton1);
+            this.groupBox3.Controls.Add(this.radioButton2);
+            this.groupBox3.Location = new System.Drawing.Point(13, 288);
+            this.groupBox3.Name = "groupBox3";
+            this.groupBox3.Size = new System.Drawing.Size(365, 166);
+            this.groupBox3.TabIndex = 3;
+            this.groupBox3.TabStop = false;
+            this.groupBox3.Text = "分组依据";
+            // 
+            // comboBox2
+            // 
+            this.comboBox2.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox2.FormattingEnabled = true;
+            this.comboBox2.Location = new System.Drawing.Point(142, 45);
+            this.comboBox2.Name = "comboBox2";
+            this.comboBox2.Size = new System.Drawing.Size(187, 28);
+            this.comboBox2.TabIndex = 2;
+            // 
+            // comboBox3
+            // 
+            this.comboBox3.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBox3.FormattingEnabled = true;
+            this.comboBox3.Location = new System.Drawing.Point(142, 91);
+            this.comboBox3.Name = "comboBox3";
+            this.comboBox3.Size = new System.Drawing.Size(187, 28);
+            this.comboBox3.TabIndex = 3;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1284, 662);
+            this.ClientSize = new System.Drawing.Size(1284, 754);
             this.Controls.Add(this.splitContainer1);
             this.Font = new System.Drawing.Font("微软雅黑", 10.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -384,12 +415,15 @@
             this.Load += new System.EventHandler(this.Form1_Load);
             this.Resize += new System.EventHandler(this.Form1_Resize);
             this.splitContainer1.Panel1.ResumeLayout(false);
-            this.splitContainer1.Panel2.ResumeLayout(false); 
+            this.splitContainer1.Panel2.ResumeLayout(false);
             this.splitContainer1.ResumeLayout(false);
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout(); 
+            this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
+            this.groupBox3.ResumeLayout(false);
+            this.groupBox3.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -406,7 +440,6 @@
         private System.Windows.Forms.DateTimePicker dateTimePicker2;
         private System.Windows.Forms.DateTimePicker dateTimePicker1;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label4;
@@ -422,6 +455,10 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Button button6;
         private System.Windows.Forms.DataGridView dataGridView1;
+        private System.Windows.Forms.GroupBox groupBox3;
+        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox comboBox2;
+        private System.Windows.Forms.RadioButton radioButton2;
     }
 }
 
