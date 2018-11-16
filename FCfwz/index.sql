@@ -9,5 +9,5 @@ GO
 CREATE  INDEX [_total] ON [dbo].[H3_划价记录]([日期], [交款标志], [C3]) ON [PRIMARY]
 GO
 
-CREATE  INDEX [_total] ON [dbo].[H4_收款记录]([日期],[发票号]) ON [PRIMARY]
+CREATE  INDEX [_total] ON [dbo].[H4_收款记录]([日期], [部门编码], [科码]) ON [PRIMARY]
 GO

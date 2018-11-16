@@ -105,7 +105,11 @@
   <ItemGroup>
     <Content Include="favicon.ico" />
     <Content Include="index.sql" />
+    <Content Include="s_m1_total.sql" />
+    <Content Include="s_m2_total.sql" />
     <Content Include="s_m_total.sql" />
+    <Content Include="s_n1_total.sql" />
+    <Content Include="s_n2_total.sql" />
     <Content Include="s_n_total.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
