@@ -98,6 +98,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <None Include="统计软件操作步骤.docx" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
