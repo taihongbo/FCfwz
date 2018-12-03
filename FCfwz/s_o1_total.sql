@@ -4,12 +4,12 @@ SET ANSI_NULLS ON
 GO
 
 
-if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[s_n1_total]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
-drop procedure [dbo].[s_n1_total]
+if exists (select * from dbo.sysobjects where id = object_id(N'[dbo].[s_o1_total]') and OBJECTPROPERTY(id, N'IsProcedure') = 1)
+drop procedure [dbo].[s_o1_total]
 GO
 
 
-CREATE PROCEDURE s_n1_total
+CREATE PROCEDURE s_o1_total
 ( 
 	@t int=0,
 	@a char(10),
@@ -64,7 +64,7 @@ set @sql=''
 if (@t=0)
 	begin
 		set @sql=@sql + 'Select * from ('
-		set @sql=@sql + ' Select  t2.科码,t2.科名, sl_t2 as 科码数量,je_t2 as 科码金额 , t3.项目编码,t3.项目名称, sl_t3 as 项目数量,je_t3 as 项目金额 ,t4.部门编码,t4.部门名称,sl_t4 as 部门数量 ,je_t4 as 部门金额 ,t5.医师编码,t5.医师名称,sl_t5 as 医师数量,je_t5 as 医师金额 from '
+		set @sql=@sql + ' Select  t2.科码,t2.科名, sl_t2 as 科码数量,je_t2 as 科码金额 , t3.收入编码,t3.收入类型, sl_t3 as 项目数量,je_t3 as 项目金额 ,t4.部门编码,t4.部门名称,sl_t4 as 部门数量 ,je_t4 as 部门金额 ,t5.医师编码,t5.医师名称,sl_t5 as 医师数量,je_t5 as 医师金额 from '
 		set @sql=@sql + ' (  '
 		set @sql=@sql + ' (Select 科码, 科名,count(H4_收款记录) as sl_t2 , sum(金额) as je_t2  '
 		set @sql=@sql + '   From H4_收款记录   '
@@ -72,34 +72,34 @@ if (@t=0)
 		set @sql=@sql + '   Group By 科码, 科名 '
 		set @sql=@sql + ' ) T2 '
 		set @sql=@sql + '  inner join  '
-		set @sql=@sql + ' (Select 科码, 科名 , 项目编码, 项目名称,count(H4_收款记录) as sl_t3,sum(金额) as je_t3  '
+		set @sql=@sql + ' (Select 科码, 科名 , 收入编码, 收入类型,count(H4_收款记录) as sl_t3,sum(金额) as je_t3  '
 		set @sql=@sql + '   From H4_收款记录   '
 		set @sql=@sql + '   Where '+ @whe 
-		set @sql=@sql + '   Group By 科码, 科名 , 项目编码, 项目名称 '
+		set @sql=@sql + '   Group By 科码, 科名 , 收入编码, 收入类型 '
 		set @sql=@sql + ' ) T3 '
 		set @sql=@sql + '  On t2.科码 =t3.科码 '
 		set @sql=@sql + '  inner join  '
-		set @sql=@sql + ' (Select 科码, 科名 ,部门编码,部门名称,项目编码, 项目名称,count(H4_收款记录) as sl_t4,sum(金额) as je_t4 '
+		set @sql=@sql + ' (Select 科码, 科名 ,部门编码,部门名称,收入编码, 收入类型,count(H4_收款记录) as sl_t4,sum(金额) as je_t4 '
 		set @sql=@sql + '   From H4_收款记录   '
 		set @sql=@sql + '   Where  '+ @whe  
-		set @sql=@sql + '   Group By 科码, 科名 ,部门编码,部门名称,项目编码, 项目名称  '
+		set @sql=@sql + '   Group By 科码, 科名 ,部门编码,部门名称,收入编码, 收入类型  '
 		set @sql=@sql + ' ) T4 '
-		set @sql=@sql + ' On t3.科码 = t4.科码 And t3.项目编码 =t4.项目编码 And t3.项目名称 =t4.项目名称 '
+		set @sql=@sql + ' On t3.科码 = t4.科码 And t3.收入编码 =t4.收入编码 And t3.收入类型 =t4.收入类型 '
 		set @sql=@sql + '  inner join  '
-		set @sql=@sql + ' (Select 科码, 科名 ,部门编码,部门名称,医师编码,医师名称,项目编码, 项目名称,count(H4_收款记录) as sl_t5,sum(金额) as je_t5 '
+		set @sql=@sql + ' (Select 科码, 科名 ,部门编码,部门名称,医师编码,医师名称,收入编码, 收入类型,count(H4_收款记录) as sl_t5,sum(金额) as je_t5 '
 		set @sql=@sql + '   From H4_收款记录   '
 		set @sql=@sql + '   Where  '+ @whe 
-		set @sql=@sql + '   Group By 科码, 科名 ,部门编码,部门名称,医师编码,医师名称,项目编码,项目名称 '
+		set @sql=@sql + '   Group By 科码, 科名 ,部门编码,部门名称,医师编码,医师名称,收入编码,收入类型 '
 		set @sql=@sql + ' ) T5 '
-		set @sql=@sql + ' On  t4.科码 =t5.科码 And t4.部门编码 =t5.部门编码 And t4.部门名称 =t5.部门名称 And t4.项目编码 =t5.项目编码 And t4.项目名称 =t5.项目名称 '
+		set @sql=@sql + ' On  t4.科码 =t5.科码 And t4.部门编码 =t5.部门编码 And t4.部门名称 =t5.部门名称 And t4.收入编码 =t5.收入编码 And t4.收入类型 =t5.收入类型 '
 		set @sql=@sql + ')'
-		set @sql=@sql + ') T6 Order By T6.科码,T6.项目编码,T6.部门编码,T6.医师编码' 
+		set @sql=@sql + ') T6 Order By T6.科码,T6.收入编码,T6.部门编码,T6.医师编码' 
 
 	end
 else
 	begin
 		set @sql=@sql + 'Select * from ('
-		set @sql=@sql + ' Select  t2.科码,t2.科名, sl_t2 as 科码数量,je_t2 as 科码金额 , t3.项目编码,t3.项目名称, sl_t3 as 项目数量,je_t3 as 项目金额  from '
+		set @sql=@sql + ' Select  t2.科码,t2.科名, sl_t2 as 科码数量,je_t2 as 科码金额 , t3.收入编码,t3.收入类型, sl_t3 as 项目数量,je_t3 as 项目金额  from '
 		set @sql=@sql + ' (  '
 		set @sql=@sql + ' (Select 科码, 科名,count(H4_收款记录) as sl_t2 , sum(金额) as je_t2  '
 		set @sql=@sql + '   From H4_收款记录   '
@@ -107,14 +107,14 @@ else
 		set @sql=@sql + '   Group By 科码, 科名 '
 		set @sql=@sql + ' ) T2 '
 		set @sql=@sql + '  inner join  '
-		set @sql=@sql + ' (Select 科码, 科名 , 项目编码, 项目名称,count(H4_收款记录) as sl_t3,sum(金额) as je_t3  '
+		set @sql=@sql + ' (Select 科码, 科名 , 收入编码, 收入类型,count(H4_收款记录) as sl_t3,sum(金额) as je_t3  '
 		set @sql=@sql + '   From H4_收款记录   '
 		set @sql=@sql + '   Where '+ @whe 
-		set @sql=@sql + '   Group By 科码, 科名 , 项目编码, 项目名称 '
+		set @sql=@sql + '   Group By 科码, 科名 , 收入编码, 收入类型 '
 		set @sql=@sql + ' ) T3 '
 		set @sql=@sql + '  On t2.科码 =t3.科码 '
 		set @sql=@sql + ')'
-		set @sql=@sql + ') T6 Order By T6.科码,T6.项目编码 ' 
+		set @sql=@sql + ') T6 Order By T6.科码,T6.收入编码 ' 
 	end
 
 

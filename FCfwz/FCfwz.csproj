@@ -110,6 +110,8 @@
     <Content Include="s_m2_total.sql" />
     <Content Include="s_n1_total.sql" />
     <Content Include="s_n2_total.sql" />
+    <Content Include="s_o1_total.sql" />
+    <Content Include="s_o2_total.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
