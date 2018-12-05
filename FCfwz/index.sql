@@ -12,12 +12,23 @@ GO
 CREATE  INDEX [_total] ON [dbo].[H4_收款记录]([日期], [部门编码], [科码]) 
 GO
 
+
+if exists (select * from dbo.sysindexes where name = N'_srcode' and id = object_id(N'[dbo].[H4_收款记录]'))
+drop index [dbo].[H4_收款记录].[_srcode]
+GO
 CREATE  INDEX [_srcode] ON [dbo].[H4_收款记录]([收入编码]) 
 GO
-
+if exists (select * from dbo.sysindexes where name = N'_kema' and id = object_id(N'[dbo].[H4_收款记录]'))
+drop index [dbo].[H4_收款记录].[_kema]
+GO
+CREATE  INDEX [_kema] ON [dbo].[H4_收款记录]([科码]) 
+GO
+if exists (select * from dbo.sysindexes where name = N'_riqi' and id = object_id(N'[dbo].[H4_收款记录]'))
+drop index [dbo].[H4_收款记录].[_riqi]
+GO
 CREATE  INDEX [_riqi] ON [dbo].[H4_收款记录]([日期]) 
 GO
 
 Alter table H4_收款记录 add 收入编码 varchar(20) null
 
-Alter table H4_收款记录 drop column 收入编码 
+--Alter table H4_收款记录 drop column 收入编码 

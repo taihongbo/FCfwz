@@ -60,6 +60,10 @@ namespace FCfwz
             this.dateTimePicker1.Value = DateTime.Now.AddDays(-7);
             this.dateTimePicker2.Value = DateTime.Now;
 
+
+            this.dateTimePicker1.Value = Convert.ToDateTime("2015-05-01");
+            this.dateTimePicker2.Value = Convert.ToDateTime("2015-05-30");
+
             this.comboBox2.Items.Add("库房");
             this.comboBox2.Items.Add("类别");
             this.comboBox2.SelectedIndex = 0;
@@ -176,11 +180,11 @@ namespace FCfwz
                 DataTable dt = new DataTable();
 
                 if (this.radioButton1.Checked == true)
-                { 
+                {
                     if (this.comboBox2.SelectedIndex == 0)
                     {
                         //根据药库分
-                        m = Get_m1_total(); 
+                        m = Get_m1_total();
                         #region 仓库
                         dt.Columns.Add("仓库", System.Type.GetType("System.String"));
                         dt.Columns.Add("仓库数量", System.Type.GetType("System.Int32"));
@@ -258,121 +262,127 @@ namespace FCfwz
                         #endregion
                     }
                     this.dataGridView1.DataSource = null;
-                    this.dataGridView1.DataSource = dt;  
+                    this.dataGridView1.DataSource = dt;
                     MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
 
                 if (this.radioButton2.Checked == true)
                 {
-                    if (this.comboBox3.SelectedIndex == 0)
+                    if (this.radioButton3.Checked == true)
                     {
-                        //处置科室
-                        n = Get_n1_total();
-                        #region 科室
-                        dt.Columns.Add("科室", System.Type.GetType("System.String"));
-                        dt.Columns.Add("科室数量", System.Type.GetType("System.Int32"));
-                        dt.Columns.Add("科室金额", System.Type.GetType("System.Decimal"));
-                        dt.Columns.Add("项目", System.Type.GetType("System.String"));
-                        dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
-                        dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
-                        if (t == 0)
+                        if (this.comboBox3.SelectedIndex == 0)
                         {
-                            dt.Columns.Add("部门", System.Type.GetType("System.String"));
-                            dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
-                            dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
-                            dt.Columns.Add("医师", System.Type.GetType("System.String"));
-                            dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
-                            dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
-                        }
-                        foreach (s_n_total item in n)
-                        {
+                            //处置科室
+                            n = Get_n1_total();
+                            #region 科室
+                            dt.Columns.Add("科室", System.Type.GetType("System.String"));
+                            dt.Columns.Add("科室数量", System.Type.GetType("System.Int32"));
+                            dt.Columns.Add("科室金额", System.Type.GetType("System.Decimal"));
+                            dt.Columns.Add("项目", System.Type.GetType("System.String"));
+                            dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
+                            dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
                             if (t == 0)
                             {
-                                dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
-                                        item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额,
-                                        item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
-                                        item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
+                                dt.Columns.Add("部门", System.Type.GetType("System.String"));
+                                dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
+                                dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
+                                dt.Columns.Add("医师", System.Type.GetType("System.String"));
+                                dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
+                                dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
                             }
-                            else
+                            foreach (s_n_total item in n)
                             {
-                                dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
-                                        item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额);
+                                if (t == 0)
+                                {
+                                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
+                                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额,
+                                            item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
+                                            item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
+                                }
+                                else
+                                {
+                                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
+                                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额);
+                                }
                             }
+                            #endregion
                         }
-                        #endregion 
+                        else
+                        {
+                            //处方来源
+                            n = Get_n2_total();
+                            #region 部门
+                            dt.Columns.Add("科室", System.Type.GetType("System.String"));
+                            dt.Columns.Add("科室数量", System.Type.GetType("System.Int32"));
+                            dt.Columns.Add("科室金额", System.Type.GetType("System.Decimal"));
+                            dt.Columns.Add("项目", System.Type.GetType("System.String"));
+                            dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
+                            dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
+                            if (t == 0)
+                            {
+                                dt.Columns.Add("部门", System.Type.GetType("System.String"));
+                                dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
+                                dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
+                                dt.Columns.Add("医师", System.Type.GetType("System.String"));
+                                dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
+                                dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
+                            }
+                            foreach (s_n_total item in n)
+                            {
+                                if (t == 0)
+                                {
+                                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
+                                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额,
+                                            item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
+                                            item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
+                                }
+                                else
+                                {
+                                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
+                                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额);
+                                }
+                            }
+                            #endregion
+                        }
+                        this.dataGridView1.DataSource = null;
+                        this.dataGridView1.DataSource = dt;
+                        MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     else
                     {
-                        //处方来源
-                        n = Get_n2_total();
-                        #region 部门
-                        dt.Columns.Add("科室", System.Type.GetType("System.String"));
-                        dt.Columns.Add("科室数量", System.Type.GetType("System.Int32"));
-                        dt.Columns.Add("科室金额", System.Type.GetType("System.Decimal"));
-                        dt.Columns.Add("项目", System.Type.GetType("System.String"));
-                        dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
-                        dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
-                        if (t == 0)
+                        //科室项目交叉
+                        if (this.radioButton4.Checked == true)
                         {
-                            dt.Columns.Add("部门", System.Type.GetType("System.String"));
-                            dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
-                            dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
-                            dt.Columns.Add("医师", System.Type.GetType("System.String"));
-                            dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
-                            dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
+                            dt = Get_nx_total(1);
+                            this.dataGridView1.DataSource = null;
+                            this.dataGridView1.DataSource = dt;
+                            MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         }
-                        foreach (s_n_total item in n)
+                        //项目科室交叉
+                        if (this.radioButton5.Checked == true)
                         {
-                            if (t == 0)
-                            {
-                                dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
-                                        item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额,
-                                        item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
-                                        item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
-                            }
-                            else
-                            {
-                                dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
-                                        item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额);
-                            }
-                        } 
-                        #endregion
+                            dt = Get_nx_total(2);
+                            this.dataGridView1.DataSource = null;
+                            this.dataGridView1.DataSource = dt;
+                            MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        //医师项目交叉
+                        if (this.radioButton6.Checked == true)
+                        {
+                            dt = Get_nx_total(3);
+                            this.dataGridView1.DataSource = null;
+                            this.dataGridView1.DataSource = dt;
+                            MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        //项目医师交叉
+                        if (this.radioButton7.Checked == true)
+                        {
+                            dt = Get_nx_total(4);
+                            this.dataGridView1.DataSource = null;
+                            this.dataGridView1.DataSource = dt;
+                            MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
                     }
-                    this.dataGridView1.DataSource = null;
-                    this.dataGridView1.DataSource = dt;  
-                    MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-
-                //科室项目交叉
-                if (this.radioButton4.Checked == true) { 
-                    dt = Get_nx_total(1); 
-                    this.dataGridView1.DataSource = null;
-                    this.dataGridView1.DataSource = dt;
-                    MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                //项目科室交叉
-                if (this.radioButton5.Checked == true)
-                {
-                    dt = Get_nx_total(2);
-                    this.dataGridView1.DataSource = null;
-                    this.dataGridView1.DataSource = dt;
-                    MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                //医师项目交叉
-                if (this.radioButton6.Checked == true)
-                {
-                    dt = Get_nx_total(3);
-                    this.dataGridView1.DataSource = null;
-                    this.dataGridView1.DataSource = dt;
-                    MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
-                //项目医师交叉
-                if (this.radioButton7.Checked == true)
-                {
-                    dt = Get_nx_total(4);
-                    this.dataGridView1.DataSource = null;
-                    this.dataGridView1.DataSource = dt;
-                    MessageBox.Show("数据获取完毕！！！", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             else
@@ -429,11 +439,11 @@ namespace FCfwz
             }
         }
 
-     
+
 
         #region 2018-11-16
         public void Excel_m1_total(List<s_m_total> m)
-        { 
+        {
 
             int t = (this.checkBox1.Checked == true ? 1 : 0);
             DataTable dt = new DataTable();
@@ -454,7 +464,7 @@ namespace FCfwz
                 dt.Columns.Add("医师", System.Type.GetType("System.String"));
                 dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
                 dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
-            } 
+            }
             foreach (s_m_total item in m)
             {
                 if (t == 0)
@@ -1392,13 +1402,13 @@ namespace FCfwz
 
             return Department;
         }
-        
+
 
         #region 2018-11-16
         public List<s_m_total> Get_m1_total()
         {
 
-            string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd"); 
+            string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
             if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
             {
                 this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
@@ -1610,11 +1620,14 @@ namespace FCfwz
                         SqlCommand command = new SqlCommand();
                         command.Connection = conn;
                         command.CommandType = CommandType.StoredProcedure;
-                        if (this.checkBox2.Checked == false) {
+                        if (this.checkBox2.Checked == false)
+                        {
                             command.CommandText = "s_n1_total";
-                        } else {
+                        }
+                        else
+                        {
                             command.CommandText = "s_o1_total";
-                        } 
+                        }
                         command.Parameters.AddRange(new SqlParameter[]{
                         new SqlParameter("@t", t),
                         new SqlParameter("@a", a),
@@ -1650,7 +1663,8 @@ namespace FCfwz
                             if (dr["项目编码"] != DBNull.Value) model.项目编码 = Convert.ToString(dr["项目编码"]).Trim();
                             if (dr["项目名称"] != DBNull.Value) model.项目名称 = Convert.ToString(dr["项目名称"]).Trim();
                         }
-                        else { 
+                        else
+                        {
                             if (dr["收入编码"] != DBNull.Value) model.项目编码 = Convert.ToString(dr["收入编码"]).Trim();
                             if (dr["收入类型"] != DBNull.Value) model.项目名称 = Convert.ToString(dr["收入类型"]).Trim();
                         }
@@ -1807,14 +1821,15 @@ namespace FCfwz
 
         private void radioButton1_CheckedChanged(object sender, EventArgs e)
         {
-            if (this.radioButton1.Checked == true) {
+            if (this.radioButton1.Checked == true)
+            {
                 this.radioButton3.Checked = true;
                 this.radioButton3.Enabled = false;
                 this.radioButton4.Enabled = false;
                 this.radioButton5.Enabled = false;
                 this.radioButton6.Enabled = false;
-                this.radioButton7.Enabled = false; 
-            } 
+                this.radioButton7.Enabled = false;
+            }
         }
 
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
@@ -1831,14 +1846,15 @@ namespace FCfwz
         }
 
 
-        private DataTable Get_nx_total(int nType) {
+        private DataTable Get_nx_total(int nType)
+        {
             DataTable dt = new DataTable();
             #region 2018-12-03
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
             if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
             {
                 this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
-            } 
+            }
 
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
 
@@ -1850,9 +1866,65 @@ namespace FCfwz
             {
                 using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 5000))
                 {
-                    
+                    string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
+                    string b = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
+                    string c = Department.Value;
 
+                    UpdateDefault(conn);
 
+                    //==================
+                    string cSql1 = "";
+                    string cSql2 = "";
+                    string cSql3 = "";
+                    string cWh01 = " 日期>='" + a + "' And 日期<='" + b + "'";
+                    if (c != "")
+                    {
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            cWh01 = cWh01 + " 科码='" + c + "'";
+                        }
+                        else
+                        {
+                            cWh01 = cWh01 + " 部门编码='" + c + "'";
+                        }
+                    } 
+                    DataTable dt1 = new DataTable();
+                    if (this.comboBox3.SelectedIndex == 0)
+                    {
+                        cSql1 = " Select 科码 , 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 科码 , 科名 order by 科码 , 科名 ";
+                    }
+                    else
+                    {
+                        cSql1 = " Select 部门编码 as 科码 , 部门名称 as 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 科码 , 科名 order by 科码 , 科名 ";
+                    }
+                    dt1 = ExecuteDataTable(conn, cSql1); 
+                    DataTable dt2 = new DataTable();
+                    if (checkBox2.Checked == true)
+                    {
+                        cSql2 = " Select 收入编码 as 项目编码 , 收入类型 as 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 收入编码 , 收入类型 order by 收入编码 , 收入类型 ";
+                    }
+                    else
+                    {
+                        cSql2 = " Select 项目编码 , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
+                    }
+                    dt2 = ExecuteDataTable(conn, cSql2);  
+                    DataTable dt3 = new DataTable();
+                    cSql3 = " Select 科码 , 科名 , 部门编码 , 部门名称 ,收入编码 , 收入类型 ,项目编码 , 项目名称 , 金额 from H4_收款记录 Where " + cWh01 ;
+                    dt3 = ExecuteDataTable(conn, cSql3);
+                    //================== 
+                    dt.Columns.Add("code", System.Type.GetType("System.String"));
+                    dt.Columns.Add("name", System.Type.GetType("System.String"));
+                    foreach (DataRow dr2 in dt2.Rows)
+                    {
+                        string ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
+                        dt.Columns.Add(ColumnName, System.Type.GetType("System.Decimal"));
+                    }
+                    foreach (DataRow dr1 in dt1.Rows)
+                    {
+                        string code =  Convert.ToString(dr1["科码"]).Trim();
+                        string name =  Convert.ToString(dr1["科名"]).Trim();  
+                        dt.Rows.Add(code,name); 
+                    } 
                 }
             }
             else
@@ -1864,6 +1936,48 @@ namespace FCfwz
             #endregion 
             return dt;
         }
+
+        private void UpdateDefault(SqlConnection conn)
+        {
+            string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
+            string b = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
+            string sql = "";
+            int nRet = 0;
+            sql = " Update H4_收款记录 Set 科码='',科名='' Where 日期>='" + a + "' And 日期<='" + b + "'";
+            nRet = ExecuteNonQuery(conn, sql);
+            sql = " Update H4_收款记录 Set  H4_收款记录.收入编码= H0_收费项目.收入编码 From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And  H4_收款记录.日期>='" + a + "' And H4_收款记录.日期<='" + b + "'";
+            nRet = ExecuteNonQuery(conn, sql);
+            sql = " Update H4_收款记录 Set  H4_收款记录.科码= H0_收费项目.科码, H4_收款记录.科名= H0_收费项目.科名  From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And H4_收款记录.科码='' And  H4_收款记录.日期>='" + a + "' And H4_收款记录.日期<='" + b + "'";
+            nRet = ExecuteNonQuery(conn, sql);
+            sql = " Update H4_收款记录 Set  科码= 部门编码,  科名= 部门名称 Where 科码='' And  日期>='" + a + "' And 日期<='" + b + "'";
+            nRet = ExecuteNonQuery(conn, sql);
+        }
+
+
+
+        private int ExecuteNonQuery(SqlConnection conn, string CommandText)
+        {
+
+            SqlCommand command = new SqlCommand();
+            command.Connection = conn;
+            command.CommandType = CommandType.Text;
+            command.CommandText = CommandText;
+            return command.ExecuteNonQuery();
+        }
+
+        private DataTable ExecuteDataTable(SqlConnection conn, string CommandText)
+        {
+            DataTable dt = new DataTable();
+            SqlCommand command = new SqlCommand();
+            command.Connection = conn;
+            command.CommandType = CommandType.Text;
+            command.CommandText = CommandText;
+            SqlDataAdapter adapter = new SqlDataAdapter();
+            adapter.SelectCommand = command;
+            adapter.Fill(dt);
+            return dt;
+        }
+
     }
     public class SQLServer
     {
