@@ -1873,6 +1873,7 @@ namespace FCfwz
                     UpdateDefault(conn);
 
                     //==================
+                    string cSql0 = "";
                     string cSql1 = "";
                     string cSql2 = "";
                     string cSql3 = "";
@@ -1887,7 +1888,13 @@ namespace FCfwz
                         {
                             cWh01 = cWh01 + " 部门编码='" + c + "'";
                         }
-                    } 
+                    }
+
+                    DataTable dt0 = new DataTable(); 
+                    cSql0 = " Select 医师编码 , 医师名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 医师编码 , 医师名称 order by 医师编码 , 医师名称 ";
+                    dt0 = ExecuteDataTable(conn, cSql0);
+
+                    //=========纵向
                     DataTable dt1 = new DataTable();
                     if (this.comboBox3.SelectedIndex == 0)
                     {
@@ -1898,6 +1905,9 @@ namespace FCfwz
                         cSql1 = " Select 部门编码 as 科码 , 部门名称 as 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 科码 , 科名 order by 科码 , 科名 ";
                     }
                     dt1 = ExecuteDataTable(conn, cSql1); 
+
+
+                    //==========横向
                     DataTable dt2 = new DataTable();
                     if (checkBox2.Checked == true)
                     {
@@ -1905,26 +1915,103 @@ namespace FCfwz
                     }
                     else
                     {
-                        cSql2 = " Select 项目编码 , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
+                        cSql2 = " Select 项目编码  , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
                     }
                     dt2 = ExecuteDataTable(conn, cSql2);  
                     DataTable dt3 = new DataTable();
-                    cSql3 = " Select 科码 , 科名 , 部门编码 , 部门名称 ,收入编码 , 收入类型 ,项目编码 , 项目名称 , 金额 from H4_收款记录 Where " + cWh01 ;
+                    cSql3 = " Select 科码 , 科名 , 部门编码 , 部门名称 ,收入编码 , 收入类型 ,项目编码 , 项目名称 ,医师编码 , 医师名称 , 金额 from H4_收款记录 Where " + cWh01 ;
                     dt3 = ExecuteDataTable(conn, cSql3);
+                    
+                    
                     //================== 
                     dt.Columns.Add("code", System.Type.GetType("System.String"));
                     dt.Columns.Add("name", System.Type.GetType("System.String"));
+
+                    string[] Cols = new string[dt2.Rows.Count];
+                    int nCol = 0;
                     foreach (DataRow dr2 in dt2.Rows)
                     {
                         string ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
+                        Cols[nCol]= Convert.ToString(dr2["项目编码"]).Trim();
                         dt.Columns.Add(ColumnName, System.Type.GetType("System.Decimal"));
+                        nCol = nCol + 1;
                     }
+
+                    string[] Rows = new string[dt1.Rows.Count];
+                    int nRow = 0;
                     foreach (DataRow dr1 in dt1.Rows)
                     {
                         string code =  Convert.ToString(dr1["科码"]).Trim();
                         string name =  Convert.ToString(dr1["科名"]).Trim();  
-                        dt.Rows.Add(code,name); 
-                    } 
+                        dt.Rows.Add(code,name);
+                        Rows[nRow] = code;
+                        nRow = nRow + 1;
+                    }
+
+                    foreach (DataRow dr3 in dt3.Rows)
+                    {
+                        string cKema = "";
+                        string cKemg = "";
+                        string cXmma = "";
+                        string cXmmg = "";
+                        string cYsma = "";
+                        string cYsmg = "";
+                        decimal je = 0;
+                        decimal value = 0;
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            cKema = Convert.ToString(dr3["科码"]).Trim();
+                            cKemg = Convert.ToString(dr3["科名"]).Trim();
+                        }
+                        else
+                        {
+                            cKema = Convert.ToString(dr3["部门编码"]).Trim();
+                            cKemg = Convert.ToString(dr3["部门名称"]).Trim();
+                        }
+
+                        if (checkBox2.Checked == true)
+                        {
+                            cXmma = Convert.ToString(dr3["收入编码"]).Trim();
+                            cXmmg = Convert.ToString(dr3["收入类型"]).Trim();
+                        }
+                        else
+                        {
+                            cXmma = Convert.ToString(dr3["项目编码"]).Trim();
+                            cXmmg = Convert.ToString(dr3["项目名称"]).Trim();
+                        }
+
+                        cYsma = Convert.ToString(dr3["医师编码"]).Trim();
+                        cYsmg = Convert.ToString(dr3["医师名称"]).Trim();
+                        je = Convert.ToDecimal(dr3["金额"]);
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            DataRow dr = dt.Rows[i];
+                            string code = Convert.ToString(dr["code"]).Trim();
+                            if (cKema == code)
+                            {
+                                for (int j = 0; j < Cols.Length; j++)
+                                {
+                                    string ColName = Cols[j];
+                                    if (ColName == cXmma)
+                                    {
+
+                                        if (dr["col_" + ColName] != DBNull.Value)
+                                        {
+                                            value = Convert.ToDecimal(dr["col_" + ColName]);
+                                        }
+                                        else
+                                        {
+                                            value = 0;
+                                        }
+                                        value = value + je;
+                                        dr["col_" + ColName] =  value ;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
             else
