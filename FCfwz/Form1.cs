@@ -77,7 +77,7 @@ namespace FCfwz
 
         private void Form1_Resize(object sender, EventArgs e)
         {
-            this.splitContainer1.SplitterDistance = 400;
+            this.splitContainer1.SplitterDistance = 320;
         }
         private void button1_Click(object sender, EventArgs e)
         {
@@ -426,7 +426,8 @@ namespace FCfwz
                             Excel_n2_total(n);
                         }
                     }
-                    else {
+                    else
+                    {
 
                         //科室项目交叉
                         if (this.radioButton4.Checked == true)
@@ -458,7 +459,7 @@ namespace FCfwz
                 MessageBox.Show("远程数据库连接失败！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            this.toolStripStatusLabel1.Text = "正在整理数据，请等待......";
+            this.toolStripStatusLabel1.Text = "";
             Application.DoEvents();
 
         }
@@ -1938,11 +1939,11 @@ namespace FCfwz
                     {
                         if (this.comboBox3.SelectedIndex == 0)
                         {
-                            cWh01 = cWh01 + " 科码='" + c + "'";
+                            cWh01 = cWh01 + " And 科码='" + c + "'";
                         }
                         else
                         {
-                            cWh01 = cWh01 + " 部门编码='" + c + "'";
+                            cWh01 = cWh01 + " And 部门编码='" + c + "'";
                         }
                     }
 
@@ -2090,7 +2091,7 @@ namespace FCfwz
                             code = Convert.ToString(dr1["项目编码"]).Trim();
                             name = Convert.ToString(dr1["项目名称"]).Trim();
                         }
- 
+
 
                         dt.Rows.Add(code, name);
                         Rows[nRow] = code;
@@ -2109,7 +2110,7 @@ namespace FCfwz
 
                         decimal je = 0;
                         decimal value = 0;
-                         
+
 
                         if (nType == 1)
                         {
@@ -2162,9 +2163,9 @@ namespace FCfwz
                             }
                         }
                         else if (nType == 3)
-                        {                             
-                           cRma = Convert.ToString(dr3["医师编码"]).Trim();
-                           cRmg = Convert.ToString(dr3["医师名称"]).Trim(); 
+                        {
+                            cRma = Convert.ToString(dr3["医师编码"]).Trim();
+                            cRmg = Convert.ToString(dr3["医师名称"]).Trim();
 
                             if (checkBox2.Checked == true)
                             {
@@ -2178,7 +2179,7 @@ namespace FCfwz
                             }
                         }
                         else if (nType == 4)
-                        { 
+                        {
                             if (checkBox2.Checked == true)
                             {
                                 cRma = Convert.ToString(dr3["收入编码"]).Trim();
@@ -2191,7 +2192,7 @@ namespace FCfwz
                             }
                             cCma = Convert.ToString(dr3["医师编码"]).Trim();
                             cCmg = Convert.ToString(dr3["医师名称"]).Trim();
-                        }  
+                        }
 
                         je = Convert.ToDecimal(dr3["金额"]);
 
@@ -2257,26 +2258,28 @@ namespace FCfwz
 
             foreach (DataRow dr2 in dt2.Rows)
             {
-                string ColumnName = ""; 
+                string ColumnName = "";
                 string HeaderText = "";
                 if (nType == 1)
                 {
                     ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
                     HeaderText = Convert.ToString(dr2["项目名称"]).Trim();
-                } else if (nType == 2)
+                }
+                else if (nType == 2)
                 {
                     ColumnName = "col_" + Convert.ToString(dr2["科码"]).Trim();
                     HeaderText = Convert.ToString(dr2["科名"]).Trim();
                 }
-                else if(nType == 3)
+                else if (nType == 3)
                 {
                     ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
                     HeaderText = Convert.ToString(dr2["项目名称"]).Trim();
-                } else if (nType == 4)
+                }
+                else if (nType == 4)
                 {
                     ColumnName = "col_" + Convert.ToString(dr2["医师编码"]).Trim();
                     HeaderText = Convert.ToString(dr2["医师名称"]).Trim();
-                } 
+                }
 
                 this.dataGridView1.Columns[ColumnName].HeaderText = HeaderText;
                 this.dataGridView1.Columns[ColumnName].DefaultCellStyle.Format = "0.00";
@@ -2290,7 +2293,506 @@ namespace FCfwz
 
 
 
-        private void Excel_nx_total(int nType) {
+        private void Excel_nx_total(int nType)
+        {
+            DataTable dt = new DataTable();
+            DataTable dt1 = new DataTable();
+            DataTable dt2 = new DataTable();
+            DataTable dt3 = new DataTable();
+
+            #region 2018-12-03
+            string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            {
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+            }
+
+            ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
+
+            if (MySQLServer.SelfConn == false)
+            {
+                MySQLServer.TestConnection();
+            }
+            if (MySQLServer.SelfConn == true)
+            {
+                using (var conn = GetSqlConnection(MySQLServer.SQL_Name, MySQLServer.SQL_DataBase, MySQLServer.SQL_ID, MySQLServer.SQL_PassWord, 5000))
+                {
+
+                    this.toolStripStatusLabel1.Text = "正在加载存储过程，请等待......";
+                    Application.DoEvents();
+
+
+                    string a = this.dateTimePicker1.Value.ToString("yyyy-MM-dd");
+                    string b = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
+                    string c = Department.Value;
+
+                    UpdateDefault(conn);
+
+                    //==================
+                    string cSql0 = "";
+                    string cSql1 = "";
+                    string cSql2 = "";
+                    string cSql3 = "";
+                    string cWh01 = " 日期>='" + a + "' And 日期<='" + b + "'";
+                    if (c != "")
+                    {
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            cWh01 = cWh01 + " And 科码='" + c + "'";
+                        }
+                        else
+                        {
+                            cWh01 = cWh01 + " And 部门编码='" + c + "'";
+                        }
+                    }
+
+                    if (nType == 1)
+                    {
+                        //=========纵向
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            cSql1 = " Select 科码 , 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 科码 , 科名 order by 科码 , 科名 ";
+                        }
+                        else
+                        {
+                            cSql1 = " Select 部门编码 as 科码 , 部门名称 as 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 部门编码 , 部门名称 order by 部门编码 , 部门名称";
+                        }
+                        //==========横向 
+                        if (checkBox2.Checked == true)
+                        {
+                            cSql2 = " Select 收入编码 as 项目编码 , 收入类型 as 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 收入编码 , 收入类型 order by 收入编码 , 收入类型 ";
+                        }
+                        else
+                        {
+                            cSql2 = " Select 项目编码  , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
+                        }
+                    }
+                    else if (nType == 2)
+                    {
+                        //=========纵向
+                        if (checkBox2.Checked == true)
+                        {
+                            cSql1 = " Select 收入编码 as 项目编码 , 收入类型 as 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 收入编码 , 收入类型 order by 收入编码 , 收入类型 ";
+                        }
+                        else
+                        {
+                            cSql1 = " Select 项目编码  , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
+                        }
+                        //==========横向 
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            cSql2 = " Select 科码 , 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 科码 , 科名 order by 科码 , 科名 ";
+                        }
+                        else
+                        {
+                            cSql2 = " Select 部门编码 as 科码 , 部门名称 as 科名 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 部门编码 , 部门名称 order by 部门编码 , 部门名称 ";
+                        }
+
+                    }
+                    else if (nType == 3)
+                    {
+                        //=========纵向
+                        cSql1 = " Select 医师编码 , 医师名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 医师编码 , 医师名称 order by 医师编码 , 医师名称 ";
+                        //==========横向 
+                        if (checkBox2.Checked == true)
+                        {
+                            cSql2 = " Select 收入编码 as 项目编码 , 收入类型 as 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 收入编码 , 收入类型 order by 收入编码 , 收入类型 ";
+                        }
+                        else
+                        {
+                            cSql2 = " Select 项目编码  , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
+                        }
+                    }
+                    else if (nType == 4)
+                    {
+                        //=========纵向
+                        if (checkBox2.Checked == true)
+                        {
+                            cSql1 = " Select 收入编码 as 项目编码 , 收入类型 as 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 收入编码 , 收入类型 order by 收入编码 , 收入类型 ";
+                        }
+                        else
+                        {
+                            cSql1 = " Select 项目编码  , 项目名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 项目编码 , 项目名称 order by 项目编码 , 项目名称 ";
+                        }
+                        //==========横向 
+                        cSql2 = " Select 医师编码 , 医师名称 , sum(金额) as 金额 from H4_收款记录 Where " + cWh01 + " Group by 医师编码 , 医师名称 order by 医师编码 , 医师名称 ";
+
+                    }
+
+                    this.toolStripStatusLabel1.Text = "正在归集数据，请等待......";
+                    Application.DoEvents();
+
+                    dt1 = ExecuteDataTable(conn, cSql1);
+
+
+                    dt2 = ExecuteDataTable(conn, cSql2);
+
+
+                    cSql3 = " Select 科码 , 科名 , 部门编码 , 部门名称 ,收入编码 , 收入类型 ,项目编码 , 项目名称 ,医师编码 , 医师名称 , 金额 from H4_收款记录 Where " + cWh01;
+                    dt3 = ExecuteDataTable(conn, cSql3);
+
+                    //================== 
+                    dt.Columns.Add("code", System.Type.GetType("System.String"));
+                    dt.Columns.Add("name", System.Type.GetType("System.String"));
+
+                    string[] Cols = new string[dt2.Rows.Count];
+                    int nCol = 0;
+                    foreach (DataRow dr2 in dt2.Rows)
+                    {
+                        string ColumnName = "";
+                        if (nType == 1)
+                        {
+                            ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
+                            Cols[nCol] = Convert.ToString(dr2["项目编码"]).Trim();
+                        }
+                        else if (nType == 2)
+                        {
+                            ColumnName = "col_" + Convert.ToString(dr2["科码"]).Trim();
+                            Cols[nCol] = Convert.ToString(dr2["科码"]).Trim();
+                        }
+                        else if (nType == 3)
+                        {
+                            ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
+                            Cols[nCol] = Convert.ToString(dr2["项目编码"]).Trim();
+                        }
+                        else if (nType == 4)
+                        {
+                            ColumnName = "col_" + Convert.ToString(dr2["医师编码"]).Trim();
+                            Cols[nCol] = Convert.ToString(dr2["医师编码"]).Trim();
+                        }
+                        dt.Columns.Add(ColumnName, System.Type.GetType("System.Decimal"));
+                        nCol = nCol + 1;
+                    }
+
+                    string[] Rows = new string[dt1.Rows.Count];
+                    int nRow = 0;
+                    foreach (DataRow dr1 in dt1.Rows)
+                    {
+                        string code = "";
+                        string name = "";
+                        if (nType == 1)
+                        {
+                            code = Convert.ToString(dr1["科码"]).Trim();
+                            name = Convert.ToString(dr1["科名"]).Trim();
+                        }
+                        else if (nType == 2)
+                        {
+                            code = Convert.ToString(dr1["项目编码"]).Trim();
+                            name = Convert.ToString(dr1["项目名称"]).Trim();
+                        }
+                        else if (nType == 3)
+                        {
+                            code = Convert.ToString(dr1["医师编码"]).Trim();
+                            name = Convert.ToString(dr1["医师名称"]).Trim();
+                        }
+                        else if (nType == 4)
+                        {
+                            code = Convert.ToString(dr1["项目编码"]).Trim();
+                            name = Convert.ToString(dr1["项目名称"]).Trim();
+                        }
+
+
+                        dt.Rows.Add(code, name);
+                        Rows[nRow] = code;
+                        nRow = nRow + 1;
+                    }
+
+                    this.toolStripStatusLabel1.Text = "正在整理数据，请等待......";
+                    Application.DoEvents();
+
+                    foreach (DataRow dr3 in dt3.Rows)
+                    {
+                        string cRma = "";
+                        string cRmg = "";
+                        string cCma = "";
+                        string cCmg = "";
+
+                        decimal je = 0;
+                        decimal value = 0;
+
+
+                        if (nType == 1)
+                        {
+                            if (this.comboBox3.SelectedIndex == 0)
+                            {
+                                cRma = Convert.ToString(dr3["科码"]).Trim();
+                                cRmg = Convert.ToString(dr3["科名"]).Trim();
+                            }
+                            else
+                            {
+                                cRma = Convert.ToString(dr3["部门编码"]).Trim();
+                                cRmg = Convert.ToString(dr3["部门名称"]).Trim();
+                            }
+
+                            if (checkBox2.Checked == true)
+                            {
+                                cCma = Convert.ToString(dr3["收入编码"]).Trim();
+                                cCmg = Convert.ToString(dr3["收入类型"]).Trim();
+                            }
+                            else
+                            {
+                                cCma = Convert.ToString(dr3["项目编码"]).Trim();
+                                cCmg = Convert.ToString(dr3["项目名称"]).Trim();
+                            }
+                        }
+                        else if (nType == 2)
+                        {
+
+
+                            if (checkBox2.Checked == true)
+                            {
+                                cRma = Convert.ToString(dr3["收入编码"]).Trim();
+                                cRmg = Convert.ToString(dr3["收入类型"]).Trim();
+                            }
+                            else
+                            {
+                                cRma = Convert.ToString(dr3["项目编码"]).Trim();
+                                cRmg = Convert.ToString(dr3["项目名称"]).Trim();
+                            }
+
+                            if (this.comboBox3.SelectedIndex == 0)
+                            {
+                                cCma = Convert.ToString(dr3["科码"]).Trim();
+                                cCmg = Convert.ToString(dr3["科名"]).Trim();
+                            }
+                            else
+                            {
+                                cCma = Convert.ToString(dr3["部门编码"]).Trim();
+                                cCmg = Convert.ToString(dr3["部门名称"]).Trim();
+                            }
+                        }
+                        else if (nType == 3)
+                        {
+                            cRma = Convert.ToString(dr3["医师编码"]).Trim();
+                            cRmg = Convert.ToString(dr3["医师名称"]).Trim();
+
+                            if (checkBox2.Checked == true)
+                            {
+                                cCma = Convert.ToString(dr3["收入编码"]).Trim();
+                                cCmg = Convert.ToString(dr3["收入类型"]).Trim();
+                            }
+                            else
+                            {
+                                cCma = Convert.ToString(dr3["项目编码"]).Trim();
+                                cCmg = Convert.ToString(dr3["项目名称"]).Trim();
+                            }
+                        }
+                        else if (nType == 4)
+                        {
+                            if (checkBox2.Checked == true)
+                            {
+                                cRma = Convert.ToString(dr3["收入编码"]).Trim();
+                                cRmg = Convert.ToString(dr3["收入类型"]).Trim();
+                            }
+                            else
+                            {
+                                cRma = Convert.ToString(dr3["项目编码"]).Trim();
+                                cRmg = Convert.ToString(dr3["项目名称"]).Trim();
+                            }
+                            cCma = Convert.ToString(dr3["医师编码"]).Trim();
+                            cCmg = Convert.ToString(dr3["医师名称"]).Trim();
+                        }
+
+                        je = Convert.ToDecimal(dr3["金额"]);
+
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            DataRow dr = dt.Rows[i];
+                            string code = Convert.ToString(dr["code"]).Trim();
+                            if (cRma == code)
+                            {
+                                for (int j = 0; j < Cols.Length; j++)
+                                {
+                                    string ColName = Cols[j];
+                                    if (ColName == cCma)
+                                    {
+
+                                        if (dr["col_" + ColName] != DBNull.Value)
+                                        {
+                                            value = Convert.ToDecimal(dr["col_" + ColName]);
+                                        }
+                                        else
+                                        {
+                                            value = 0;
+                                        }
+                                        value = value + je;
+                                        dr["col_" + ColName] = value;
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    this.toolStripStatusLabel1.Text = "导出Excel，请等待......";
+                    Application.DoEvents();
+                    #region 
+
+
+                    IWorkbook workBook = new HSSFWorkbook();
+
+                    if (nType == 1)
+                    {
+                        workBook = ExcelHelper.ToExcelPro(dt, "肥城市妇幼保健院诊疗项目（科室项目)表");
+                    }
+                    else if (nType == 2)
+                    {
+                        workBook = ExcelHelper.ToExcelPro(dt, "肥城市妇幼保健院诊疗项目（项目科室)表");
+                    }
+                    else if (nType == 3)
+                    {
+                        workBook = ExcelHelper.ToExcelPro(dt, "肥城市妇幼保健院诊疗项目（医师项目)表");
+                    }
+                    else if (nType == 4)
+                    {
+                        workBook = ExcelHelper.ToExcelPro(dt, "肥城市妇幼保健院诊疗项目（项目医师)表");
+                    }
+
+                    this.toolStripStatusLabel1.Text = "整理Excel表头，请等待......";
+                    Application.DoEvents();
+
+                    ISheet sheet1 = workBook.GetSheetAt(0);
+
+                    // 
+                    IRow row;
+                    ICell cell;
+                    int f = (Department.Value == "" ? 0 : 1);
+
+                   
+                    row = sheet1.GetRow(1);
+                    cell = row.GetCell(0);
+                    cell.SetCellValue("科室：" + Department.Text + " 日期范围：" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + " ~ " + this.dateTimePicker2.Value.ToString("yyyy-MM-dd"));
+                 
+                    row = sheet1.GetRow(2);
+                    row.Cells[0].SetCellValue("编码"); 
+                    row.Cells[0].SetCellValue("名称");
+
+                    if (nType == 1)
+                    {
+                        row.Cells[0].SetCellValue("科室编码");
+                        row.Cells[1].SetCellValue("科室名称");
+                    }
+                    else if (nType == 2)
+                    {
+                        row.Cells[0].SetCellValue("项目编码");
+                        row.Cells[1].SetCellValue("项目名称");
+                    }
+                    else if (nType == 3)
+                    {
+                        row.Cells[0].SetCellValue("医师编码");
+                        row.Cells[1].SetCellValue("医师名称");
+                    }
+                    else if (nType == 4)
+                    {
+                        row.Cells[0].SetCellValue("项目编码");
+                        row.Cells[1].SetCellValue("项目名称");
+                    }
+
+
+
+                    foreach (var item in row.Cells)
+                    {
+                        string cellValue = item.StringCellValue;
+                        for (int i = 0; i < dt2.Rows.Count; i++)
+                        {
+                            DataRow dr2 = dt2.Rows[i];
+                            string ColumnName = "";
+                            string HeaderText = "";
+                            if (nType == 1)
+                            {
+                                ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
+                                HeaderText = Convert.ToString(dr2["项目名称"]).Trim();
+                            }
+                            else if (nType == 2)
+                            {
+                                ColumnName = "col_" + Convert.ToString(dr2["科码"]).Trim();
+                                HeaderText = Convert.ToString(dr2["科名"]).Trim();
+                            }
+                            else if (nType == 3)
+                            {
+                                ColumnName = "col_" + Convert.ToString(dr2["项目编码"]).Trim();
+                                HeaderText = Convert.ToString(dr2["项目名称"]).Trim();
+                            }
+                            else if (nType == 4)
+                            {
+                                ColumnName = "col_" + Convert.ToString(dr2["医师编码"]).Trim();
+                                HeaderText = Convert.ToString(dr2["医师名称"]).Trim();
+                            }
+
+
+                            if (cellValue == ColumnName)
+                            {
+                                item.SetCellValue(HeaderText);
+                                break;
+                            }
+                        }
+
+                    }
+
+                    System.IO.Directory.CreateDirectory(Application.StartupPath + @"\Excel");
+
+                    string excelFile = Application.StartupPath + @"\Excel\诊疗处置_科室项目_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+
+                    if (nType == 1)
+                    {
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗处置_科室项目_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                        else
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗开方_科室项目_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+
+                    }
+                    else if (nType == 2)
+                    {
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗处置_项目科室_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                        else
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗开方_项目科室_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                    }
+                    else if (nType == 3)
+                    {
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗处置_医师项目_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                        else
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗开方_医师项目_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                    }
+                    else if (nType == 4)
+                    {
+                        if (this.comboBox3.SelectedIndex == 0)
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗处置_项目医师_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                        else
+                        {
+                            excelFile = Application.StartupPath + @"\Excel\诊疗开方_项目医师_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+                        }
+                    }
+                    FileStream stream = File.OpenWrite(excelFile); ;
+                    workBook.Write(stream);
+                    stream.Close();
+                    MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+
+
+
+                    #endregion
+                }
+            }
+            else
+            {
+                MessageBox.Show("远程数据库连接失败！！！", "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            #endregion
 
 
         }
