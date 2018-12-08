@@ -88,7 +88,7 @@ namespace FCfwz
                 this.groupBox1.Visible = false;
                 this.groupBox2.Visible = false;
                 this.groupBox3.Visible = false;
-
+                this.groupBox4.Visible = false;
                 this.button4.Visible = false;
                 this.button5.Visible = false;
                 this.button6.Visible = false;
@@ -101,7 +101,7 @@ namespace FCfwz
                 this.groupBox1.Visible = true;
                 this.groupBox2.Visible = true;
                 this.groupBox3.Visible = true;
-
+                this.groupBox4.Visible = true;
                 this.button4.Visible = true;
                 this.button5.Visible = true;
                 this.button6.Visible = true;
