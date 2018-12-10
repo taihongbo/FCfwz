@@ -60,8 +60,7 @@ namespace FCfwz
             this.dateTimePicker1.Value = DateTime.Now.AddDays(-7);
             this.dateTimePicker2.Value = DateTime.Now; 
 
-            this.comboBox2.Items.Add("库房");
-            this.comboBox2.Items.Add("类别");
+            this.comboBox2.Items.Add("类别"); 
             this.comboBox2.SelectedIndex = 0;
 
             this.comboBox3.Items.Add("处置科室");
@@ -180,12 +179,12 @@ namespace FCfwz
                 {
                     if (this.comboBox2.SelectedIndex == 0)
                     {
-                        //根据药库分
+                        //根据类别分
                         m = Get_m1_total();
-                        #region 仓库
-                        dt.Columns.Add("仓库", System.Type.GetType("System.String"));
-                        dt.Columns.Add("仓库数量", System.Type.GetType("System.Int32"));
-                        dt.Columns.Add("仓库金额", System.Type.GetType("System.Decimal"));
+                        #region 类别
+                        dt.Columns.Add("类别", System.Type.GetType("System.String"));
+                        dt.Columns.Add("类别数量", System.Type.GetType("System.Int32"));
+                        dt.Columns.Add("类别金额", System.Type.GetType("System.Decimal"));
                         dt.Columns.Add("药品", System.Type.GetType("System.String"));
                         dt.Columns.Add("规格", System.Type.GetType("System.String"));
                         dt.Columns.Add("单位", System.Type.GetType("System.String"));
@@ -205,14 +204,14 @@ namespace FCfwz
                         {
                             if (t == 0)
                             {
-                                dt.Rows.Add(item.库名, Convert.ToInt32(item.库码数量), item.库码金额,
+                                dt.Rows.Add(item.类名, Convert.ToInt32(item.类码数量), item.类码金额,
                                         item.药品名称, item.规格, item.单位, item.单价, Convert.ToInt32(item.药品数量), item.药品金额,
                                         item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
                                         item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
                             }
                             else
                             {
-                                dt.Rows.Add(item.库名, Convert.ToInt32(item.库码数量), item.库码金额,
+                                dt.Rows.Add(item.类名, Convert.ToInt32(item.类码数量), item.类码金额,
                                         item.药品名称, item.规格, item.单位, item.单价, Convert.ToInt32(item.药品数量), item.药品金额);
                             }
                         }
@@ -393,7 +392,7 @@ namespace FCfwz
 
                     if (this.comboBox2.SelectedIndex == 0)
                     {
-                        //根据药库分
+                        //根据药类分
                         m = Get_m1_total();
                         Excel_m1_total(m);
                     }
@@ -465,12 +464,11 @@ namespace FCfwz
         #region 2018-11-16
         public void Excel_m1_total(List<s_m_total> m)
         {
-
             int t = (this.checkBox1.Checked == true ? 1 : 0);
             DataTable dt = new DataTable();
-            dt.Columns.Add("仓库", System.Type.GetType("System.String"));
-            dt.Columns.Add("仓库数量", System.Type.GetType("System.Int32"));
-            dt.Columns.Add("仓库金额", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("类别", System.Type.GetType("System.String"));
+            dt.Columns.Add("类别数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("类别金额", System.Type.GetType("System.Decimal"));
             dt.Columns.Add("药品", System.Type.GetType("System.String"));
             dt.Columns.Add("规格", System.Type.GetType("System.String"));
             dt.Columns.Add("单位", System.Type.GetType("System.String"));
@@ -490,19 +488,19 @@ namespace FCfwz
             {
                 if (t == 0)
                 {
-                    dt.Rows.Add(item.库名, Convert.ToInt32(item.库码数量), item.库码金额,
+                    dt.Rows.Add(item.类名, Convert.ToInt32(item.类码数量), item.类码金额,
                             item.药品名称, item.规格, item.单位, item.单价, Convert.ToInt32(item.药品数量), item.药品金额,
                             item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
                             item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
                 }
                 else
                 {
-                    dt.Rows.Add(item.库名, Convert.ToInt32(item.库码数量), item.库码金额,
+                    dt.Rows.Add(item.类名, Convert.ToInt32(item.类码数量), item.类码金额,
                             item.药品名称, item.规格, item.单位, item.单价, Convert.ToInt32(item.药品数量), item.药品金额);
                 }
             }
             IWorkbook workBook = new HSSFWorkbook();
-            workBook = ExcelHelper.ToExcel(dt, "肥城市妇幼保健院药品销售(库房)分类明细");
+            workBook = ExcelHelper.ToExcel(dt, "肥城市妇幼保健院药品销售(类别)分类明细");
 
             ISheet sheet1 = workBook.GetSheetAt(0);
             sheet1.SetColumnWidth(0, 20 * 256);     //仓库
@@ -539,11 +537,11 @@ namespace FCfwz
             #region 第二行
             row = sheet1.GetRow(2);
             cell = row.GetCell(0);
-            cell.SetCellValue("库房");
+            cell.SetCellValue("类别");
             cell = row.GetCell(1);
-            cell.SetCellValue("库房");
+            cell.SetCellValue("类别");
             cell = row.GetCell(2);
-            cell.SetCellValue("库房");
+            cell.SetCellValue("类别");
 
             cell = row.GetCell(3);
             cell.SetCellValue("药品");
@@ -664,203 +662,8 @@ namespace FCfwz
             }
 
             #endregion 
-
             System.IO.Directory.CreateDirectory(Application.StartupPath + @"\Excel");
-            string excelFile = Application.StartupPath + @"\Excel\药品库房_" + t.ToString() + f.ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
-            FileStream stream = File.OpenWrite(excelFile); ;
-            workBook.Write(stream);
-            stream.Close();
-            MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-        }
-
-        public void Excel_n1_total(List<s_n_total> n)
-        {
-            int t = (this.checkBox1.Checked == true ? 1 : 0);
-            DataTable dt = new DataTable();
-            dt.Columns.Add("科室", System.Type.GetType("System.String"));
-            dt.Columns.Add("科室数量", System.Type.GetType("System.Int32"));
-            dt.Columns.Add("科室金额", System.Type.GetType("System.Decimal"));
-            dt.Columns.Add("项目", System.Type.GetType("System.String"));
-            dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
-            dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
-            if (t == 0)
-            {
-                dt.Columns.Add("部门", System.Type.GetType("System.String"));
-                dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
-                dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
-                dt.Columns.Add("医师", System.Type.GetType("System.String"));
-                dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
-                dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
-            }
-            foreach (s_n_total item in n)
-            {
-                if (t == 0)
-                {
-                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
-                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额,
-                            item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
-                            item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
-                }
-                else
-                {
-                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
-                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额);
-                }
-            }
-
-            IWorkbook workBook = new HSSFWorkbook();
-            workBook = ExcelHelper.ToExcel(dt, "肥城市妇幼保健院诊疗项目(科室)分类明细");
-
-            ISheet sheet1 = workBook.GetSheetAt(0);
-            sheet1.SetColumnWidth(0, 20 * 256);     //科名
-            sheet1.SetColumnWidth(1, 12 * 256);     //数量
-            sheet1.SetColumnWidth(2, 12 * 256);     //金额
-            sheet1.SetColumnWidth(3, 50 * 256);     //项目名称
-            sheet1.SetColumnWidth(4, 12 * 256);     //数量
-            sheet1.SetColumnWidth(5, 12 * 256);     //金额
-            if (t == 0)
-            {
-                sheet1.SetColumnWidth(6, 20 * 256);     //部门
-                sheet1.SetColumnWidth(7, 12 * 256);     //数量
-                sheet1.SetColumnWidth(8, 12 * 256);     //金额
-                sheet1.SetColumnWidth(9, 12 * 256);     //医师
-                sheet1.SetColumnWidth(10, 12 * 256);     //数量
-                sheet1.SetColumnWidth(11, 12 * 256);     //金额
-            }
-
-            //整理表头 
-            IRow row;
-            ICell cell;
-            ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
-            int f = (Department.Value == "" ? 0 : 1);
-
-            #region 第一行
-            row = sheet1.GetRow(1);
-            cell = row.GetCell(0);
-            cell.SetCellValue("科室：" + Department.Text + " 日期范围：" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + " ~ " + this.dateTimePicker2.Value.ToString("yyyy-MM-dd"));
-            #endregion
-
-            #region 第二行
-            row = sheet1.GetRow(2);
-            cell = row.GetCell(0);
-            cell.SetCellValue("科室");
-            cell = row.GetCell(1);
-            cell.SetCellValue("科室");
-            cell = row.GetCell(2);
-            cell.SetCellValue("科室");
-
-            cell = row.GetCell(3);
-            cell.SetCellValue("项目");
-            cell = row.GetCell(4);
-            cell.SetCellValue("项目");
-            cell = row.GetCell(5);
-            cell.SetCellValue("项目");
-            if (t == 0)
-            {
-                cell = row.GetCell(6);
-                cell.SetCellValue("部门");
-                cell = row.GetCell(7);
-                cell.SetCellValue("部门");
-                cell = row.GetCell(8);
-                cell.SetCellValue("部门");
-
-                cell = row.GetCell(9);
-                cell.SetCellValue("医师");
-                cell = row.GetCell(10);
-                cell.SetCellValue("医师");
-                cell = row.GetCell(11);
-                cell.SetCellValue("医师");
-            }
-            #endregion 
-            #region 第三行
-            row = sheet1.GetRow(3);
-            cell = row.GetCell(0);
-            cell.SetCellValue("名称");
-            cell = row.GetCell(1);
-            cell.SetCellValue("数量");
-            cell = row.GetCell(2);
-            cell.SetCellValue("金额");
-
-            cell = row.GetCell(3);
-            cell.SetCellValue("名称");
-            cell = row.GetCell(4);
-            cell.SetCellValue("数量");
-            cell = row.GetCell(5);
-            cell.SetCellValue("金额");
-            if (t == 0)
-            {
-                cell = row.GetCell(6);
-                cell.SetCellValue("名称");
-                cell = row.GetCell(7);
-                cell.SetCellValue("数量");
-                cell = row.GetCell(8);
-                cell.SetCellValue("金额");
-
-                cell = row.GetCell(9);
-                cell.SetCellValue("姓名");
-                cell = row.GetCell(10);
-                cell.SetCellValue("数量");
-                cell = row.GetCell(11);
-                cell.SetCellValue("金额");
-            }
-            #endregion 
-            #region 合并表头第一行
-            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 0, 2));
-            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 3, 5));
-            if (t == 0)
-            {
-                sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 6, 8));
-                sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 9, 11));
-            }
-            #endregion
-
-            #region 正文合并
-
-            int start = 0;      //记录同组开始行号
-            int end = 0;        //记录同组结束行号
-            string temp = "";
-            for (int j = 0; j < dt.Columns.Count - 2; j++)
-            {
-                start = 4;  //记录同组开始行号
-                end = 4;    //记录同组结束行号
-
-                for (int i = 0; i < n.Count; i++)
-                {
-                    row = sheet1.GetRow(i + 4);
-                    cell = row.GetCell(j);
-                    var cellText = "";
-                    for (int l = 0; l < j + 1; l++)
-                    {
-                        cellText = cellText + row.GetCell(l).StringCellValue;
-                    }
-
-                    if (cellText == temp)       //上下行相等，记录要合并的最后一行
-                    {
-                        end = i + 4;
-                    }
-                    else//上下行不等，记录
-                    {
-                        if (start != end)
-                        {
-                            CellRangeAddress region = new CellRangeAddress(start, end, j, j);
-                            sheet1.AddMergedRegion(region);
-                        }
-                        start = i + 4;
-                        end = i + 4;
-                        temp = cellText;
-                    }
-                }
-                if (start != end)
-                {
-                    CellRangeAddress region = new CellRangeAddress(start, end, j, j);
-                    sheet1.AddMergedRegion(region);
-                }
-            }
-
-            #endregion 
-
-            System.IO.Directory.CreateDirectory(Application.StartupPath + @"\Excel");
-            string excelFile = Application.StartupPath + @"\Excel\诊疗科室_" + t.ToString() + f.ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            string excelFile = Application.StartupPath + @"\Excel\药品类别_" + t.ToString() + f.ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
             FileStream stream = File.OpenWrite(excelFile); ;
             workBook.Write(stream);
             stream.Close();
@@ -1075,6 +878,201 @@ namespace FCfwz
             MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
+        public void Excel_n1_total(List<s_n_total> n)
+        {
+            int t = (this.checkBox1.Checked == true ? 1 : 0);
+            DataTable dt = new DataTable();
+            dt.Columns.Add("科室", System.Type.GetType("System.String"));
+            dt.Columns.Add("科室数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("科室金额", System.Type.GetType("System.Decimal"));
+            dt.Columns.Add("项目", System.Type.GetType("System.String"));
+            dt.Columns.Add("项目数量", System.Type.GetType("System.Int32"));
+            dt.Columns.Add("项目金额", System.Type.GetType("System.Decimal"));
+            if (t == 0)
+            {
+                dt.Columns.Add("部门", System.Type.GetType("System.String"));
+                dt.Columns.Add("部门数量", System.Type.GetType("System.Int32"));
+                dt.Columns.Add("部门金额", System.Type.GetType("System.Decimal"));
+                dt.Columns.Add("医师", System.Type.GetType("System.String"));
+                dt.Columns.Add("医师数量", System.Type.GetType("System.Int32"));
+                dt.Columns.Add("医师金额", System.Type.GetType("System.Decimal"));
+            }
+            foreach (s_n_total item in n)
+            {
+                if (t == 0)
+                {
+                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
+                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额,
+                            item.部门名称, Convert.ToInt32(item.部门数量), item.部门金额,
+                            item.医师名称, Convert.ToInt32(item.医师数量), item.医师金额);
+                }
+                else
+                {
+                    dt.Rows.Add(item.科名, Convert.ToInt32(item.科码数量), item.科码金额,
+                            item.项目名称, Convert.ToInt32(item.项目数量), item.项目金额);
+                }
+            }
+
+            IWorkbook workBook = new HSSFWorkbook();
+            workBook = ExcelHelper.ToExcel(dt, "肥城市妇幼保健院诊疗项目(科室)分类明细");
+
+            ISheet sheet1 = workBook.GetSheetAt(0);
+            sheet1.SetColumnWidth(0, 20 * 256);     //科名
+            sheet1.SetColumnWidth(1, 12 * 256);     //数量
+            sheet1.SetColumnWidth(2, 12 * 256);     //金额
+            sheet1.SetColumnWidth(3, 50 * 256);     //项目名称
+            sheet1.SetColumnWidth(4, 12 * 256);     //数量
+            sheet1.SetColumnWidth(5, 12 * 256);     //金额
+            if (t == 0)
+            {
+                sheet1.SetColumnWidth(6, 20 * 256);     //部门
+                sheet1.SetColumnWidth(7, 12 * 256);     //数量
+                sheet1.SetColumnWidth(8, 12 * 256);     //金额
+                sheet1.SetColumnWidth(9, 12 * 256);     //医师
+                sheet1.SetColumnWidth(10, 12 * 256);     //数量
+                sheet1.SetColumnWidth(11, 12 * 256);     //金额
+            }
+
+            //整理表头 
+            IRow row;
+            ICell cell;
+            ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
+            int f = (Department.Value == "" ? 0 : 1);
+
+            #region 第一行
+            row = sheet1.GetRow(1);
+            cell = row.GetCell(0);
+            cell.SetCellValue("科室：" + Department.Text + " 日期范围：" + this.dateTimePicker1.Value.ToString("yyyy-MM-dd") + " ~ " + this.dateTimePicker2.Value.ToString("yyyy-MM-dd"));
+            #endregion
+
+            #region 第二行
+            row = sheet1.GetRow(2);
+            cell = row.GetCell(0);
+            cell.SetCellValue("科室");
+            cell = row.GetCell(1);
+            cell.SetCellValue("科室");
+            cell = row.GetCell(2);
+            cell.SetCellValue("科室");
+
+            cell = row.GetCell(3);
+            cell.SetCellValue("项目");
+            cell = row.GetCell(4);
+            cell.SetCellValue("项目");
+            cell = row.GetCell(5);
+            cell.SetCellValue("项目");
+            if (t == 0)
+            {
+                cell = row.GetCell(6);
+                cell.SetCellValue("部门");
+                cell = row.GetCell(7);
+                cell.SetCellValue("部门");
+                cell = row.GetCell(8);
+                cell.SetCellValue("部门");
+
+                cell = row.GetCell(9);
+                cell.SetCellValue("医师");
+                cell = row.GetCell(10);
+                cell.SetCellValue("医师");
+                cell = row.GetCell(11);
+                cell.SetCellValue("医师");
+            }
+            #endregion 
+            #region 第三行
+            row = sheet1.GetRow(3);
+            cell = row.GetCell(0);
+            cell.SetCellValue("名称");
+            cell = row.GetCell(1);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(2);
+            cell.SetCellValue("金额");
+
+            cell = row.GetCell(3);
+            cell.SetCellValue("名称");
+            cell = row.GetCell(4);
+            cell.SetCellValue("数量");
+            cell = row.GetCell(5);
+            cell.SetCellValue("金额");
+            if (t == 0)
+            {
+                cell = row.GetCell(6);
+                cell.SetCellValue("名称");
+                cell = row.GetCell(7);
+                cell.SetCellValue("数量");
+                cell = row.GetCell(8);
+                cell.SetCellValue("金额");
+
+                cell = row.GetCell(9);
+                cell.SetCellValue("姓名");
+                cell = row.GetCell(10);
+                cell.SetCellValue("数量");
+                cell = row.GetCell(11);
+                cell.SetCellValue("金额");
+            }
+            #endregion 
+            #region 合并表头第一行
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 0, 2));
+            sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 3, 5));
+            if (t == 0)
+            {
+                sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 6, 8));
+                sheet1.AddMergedRegion(new CellRangeAddress(2, 2, 9, 11));
+            }
+            #endregion
+
+            #region 正文合并
+
+            int start = 0;      //记录同组开始行号
+            int end = 0;        //记录同组结束行号
+            string temp = "";
+            for (int j = 0; j < dt.Columns.Count - 2; j++)
+            {
+                start = 4;  //记录同组开始行号
+                end = 4;    //记录同组结束行号
+
+                for (int i = 0; i < n.Count; i++)
+                {
+                    row = sheet1.GetRow(i + 4);
+                    cell = row.GetCell(j);
+                    var cellText = "";
+                    for (int l = 0; l < j + 1; l++)
+                    {
+                        cellText = cellText + row.GetCell(l).StringCellValue;
+                    }
+
+                    if (cellText == temp)       //上下行相等，记录要合并的最后一行
+                    {
+                        end = i + 4;
+                    }
+                    else//上下行不等，记录
+                    {
+                        if (start != end)
+                        {
+                            CellRangeAddress region = new CellRangeAddress(start, end, j, j);
+                            sheet1.AddMergedRegion(region);
+                        }
+                        start = i + 4;
+                        end = i + 4;
+                        temp = cellText;
+                    }
+                }
+                if (start != end)
+                {
+                    CellRangeAddress region = new CellRangeAddress(start, end, j, j);
+                    sheet1.AddMergedRegion(region);
+                }
+            }
+
+            #endregion 
+
+            System.IO.Directory.CreateDirectory(Application.StartupPath + @"\Excel");
+            string excelFile = Application.StartupPath + @"\Excel\诊疗科室_" + t.ToString() + f.ToString() + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".xls";
+            FileStream stream = File.OpenWrite(excelFile); ;
+            workBook.Write(stream);
+            stream.Close();
+            MessageBox.Show("文件位置：" + excelFile, "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+    
         public void Excel_n2_total(List<s_n_total> n)
         {
             int t = (this.checkBox1.Checked == true ? 1 : 0);
@@ -1428,7 +1426,6 @@ namespace FCfwz
         #region 2018-11-16
         public List<s_m_total> Get_m1_total()
         {
-
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
             if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
@@ -1461,7 +1458,7 @@ namespace FCfwz
                         SqlCommand command = new SqlCommand();
                         command.Connection = conn;
                         command.CommandType = CommandType.StoredProcedure;
-                        command.CommandText = "s_m1_total";
+                        command.CommandText = "s_m2_total";
                         command.Parameters.AddRange(new SqlParameter[]{
                         new SqlParameter("@t", t),
                         new SqlParameter("@a", a),
@@ -1484,15 +1481,15 @@ namespace FCfwz
                     }
                     this.toolStripStatusLabel1.Text = "正在整理数据，请等待......";
                     Application.DoEvents();
+
                     foreach (DataRow dr in dt.Rows)
                     {
                         s_m_total model = new s_m_total();
+                        if (dr["类码"] != DBNull.Value) model.类码 = Convert.ToString(dr["类码"]).Trim();
+                        if (dr["类名"] != DBNull.Value) model.类名 = Convert.ToString(dr["类名"]).Trim();
 
-                        if (dr["库码"] != DBNull.Value) model.库码 = Convert.ToString(dr["库码"]).Trim();
-                        if (dr["库名"] != DBNull.Value) model.库名 = Convert.ToString(dr["库名"]).Trim();
-
-                        if (dr["sl_t2"] != DBNull.Value) model.库码数量 = Convert.ToDecimal(dr["sl_t2"]);
-                        if (dr["je_t2"] != DBNull.Value) model.库码金额 = Convert.ToDecimal(dr["je_t2"]);
+                        if (dr["sl_t2"] != DBNull.Value) model.类码数量 = Convert.ToDecimal(dr["sl_t2"]);
+                        if (dr["je_t2"] != DBNull.Value) model.类码金额 = Convert.ToDecimal(dr["je_t2"]);
 
                         if (dr["药品编码"] != DBNull.Value) model.药品编码 = Convert.ToString(dr["药品编码"]).Trim();
                         if (dr["药品名称"] != DBNull.Value) model.药品名称 = Convert.ToString(dr["药品名称"]).Trim();
@@ -1501,12 +1498,14 @@ namespace FCfwz
                         if (dr["单价"] != DBNull.Value) model.单价 = Convert.ToDecimal(dr["单价"]);
                         if (dr["sl_t3"] != DBNull.Value) model.药品数量 = Convert.ToDecimal(dr["sl_t3"]);
                         if (dr["je_t3"] != DBNull.Value) model.药品金额 = Convert.ToDecimal(dr["je_t3"]);
+
                         if (t == 0)
                         {
                             if (dr["部门编码"] != DBNull.Value) model.部门编码 = Convert.ToString(dr["部门编码"]).Trim();
                             if (dr["部门名称"] != DBNull.Value) model.部门名称 = Convert.ToString(dr["部门名称"]).Trim();
                             if (dr["sl_t4"] != DBNull.Value) model.部门数量 = Convert.ToDecimal(dr["sl_t4"]);
                             if (dr["je_t4"] != DBNull.Value) model.部门金额 = Convert.ToDecimal(dr["je_t4"]);
+
                             if (dr["医师编码"] != DBNull.Value) model.医师编码 = Convert.ToString(dr["医师编码"]).Trim();
                             if (dr["医师名称"] != DBNull.Value) model.医师名称 = Convert.ToString(dr["医师名称"]).Trim();
                             if (dr["sl_t5"] != DBNull.Value) model.医师数量 = Convert.ToDecimal(dr["sl_t5"]);
@@ -1522,7 +1521,6 @@ namespace FCfwz
             }
             return m_total;
         }
-
         public List<s_m_total> Get_m2_total()
         {
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
@@ -2798,9 +2796,9 @@ namespace FCfwz
             string b = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
             string sql = "";
             int nRet = 0;
-            sql = " Update H4_收款记录 Set 科码='',科名='' Where 日期>='" + a + "' And 日期<='" + b + "'";
+            sql = " Update H4_收款记录 Set 科码='',科名='' Where 日期>='" + a + "' And 日期<='" + b + "' And ( 科码='' or 科名='') ";
             nRet = ExecuteNonQuery(conn, sql);
-            sql = " Update H4_收款记录 Set  H4_收款记录.收入编码= H0_收费项目.收入编码 From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And  H4_收款记录.日期>='" + a + "' And H4_收款记录.日期<='" + b + "'";
+            sql = " Update H4_收款记录 Set  H4_收款记录.收入编码= H0_收费项目.收入编码 ,H4_收款记录.收入类型= H0_收费项目.收入名称 From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And  H4_收款记录.日期>='" + a + "' And H4_收款记录.日期<='" + b + "' And ( H4_收款记录.收入编码= '' Or H4_收款记录.收入类型='' )";
             nRet = ExecuteNonQuery(conn, sql);
             sql = " Update H4_收款记录 Set  H4_收款记录.科码= H0_收费项目.科码, H4_收款记录.科名= H0_收费项目.科名  From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And H4_收款记录.科码='' And  H4_收款记录.日期>='" + a + "' And H4_收款记录.日期<='" + b + "'";
             nRet = ExecuteNonQuery(conn, sql);

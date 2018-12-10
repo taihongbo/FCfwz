@@ -42,11 +42,11 @@ else
 set @sql=''
 
 
-set @sql=' Update H4_收款记录 Set 科码='''',科名='''' Where 日期>=''' + @a + ''' And 日期<=''' + @b +''' '
+set @sql=' Update H4_收款记录 Set 科码='''',科名='''' Where 日期>=''' + @a + ''' And 日期<=''' + @b +''' And  (科码='''' Or 科名!='''') '
 print(@sql)
 execute(@sql)  
 
-set @sql=' Update H4_收款记录 Set  H4_收款记录.收入编码= H0_收费项目.收入编码 From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And  H4_收款记录.日期>=''' + @a + ''' And H4_收款记录.日期<=''' + @b +''' '
+set @sql=' Update H4_收款记录 Set  H4_收款记录.收入编码= H0_收费项目.收入编码 ,H4_收款记录.收入类型= H0_收费项目.收入名称 From H0_收费项目 Where H0_收费项目.项目编码=H4_收款记录.项目编码 And  H4_收款记录.日期>=''' + @a + ''' And H4_收款记录.日期<=''' + @b +''' And (H4_收款记录.收入编码='''' Or H4_收款记录.收入类型='''') '
 print(@sql)
 execute(@sql) 
 
