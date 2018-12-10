@@ -58,11 +58,7 @@ namespace FCfwz
             if (this.comboBox1.Items.Count > 0) { this.comboBox1.SelectedIndex = 0; }
 
             this.dateTimePicker1.Value = DateTime.Now.AddDays(-7);
-            this.dateTimePicker2.Value = DateTime.Now;
-
-
-            this.dateTimePicker1.Value = Convert.ToDateTime("2015-05-01");
-            this.dateTimePicker2.Value = Convert.ToDateTime("2015-05-30");
+            this.dateTimePicker2.Value = DateTime.Now; 
 
             this.comboBox2.Items.Add("库房");
             this.comboBox2.Items.Add("类别");
@@ -1434,9 +1430,9 @@ namespace FCfwz
         {
 
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
-            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
-                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-15");
             }
 
             int t = (this.checkBox1.Checked == true ? 1 : 0);
@@ -1530,9 +1526,9 @@ namespace FCfwz
         public List<s_m_total> Get_m2_total()
         {
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
-            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
-                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-15");
             }
 
             int t = (this.checkBox1.Checked == true ? 1 : 0);
@@ -1628,9 +1624,9 @@ namespace FCfwz
         public List<s_n_total> Get_n1_total()
         {
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
-            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
-                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-15");
             }
 
             int t = (this.checkBox1.Checked == true ? 1 : 0);
@@ -1740,9 +1736,9 @@ namespace FCfwz
         public List<s_n_total> Get_n2_total()
         {
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
-            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
-                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-15");
             }
 
             int t = (this.checkBox1.Checked == true ? 1 : 0);
@@ -1903,9 +1899,9 @@ namespace FCfwz
 
             #region 2018-12-03
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
-            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
-                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-15");
             }
 
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
@@ -2302,9 +2298,9 @@ namespace FCfwz
 
             #region 2018-12-03
             string cEnd = this.dateTimePicker2.Value.ToString("yyyy-MM-dd");
-            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-01"))
+            if (DateTime.Parse(cEnd) >= DateTime.Parse("2019-01-15"))
             {
-                this.dateTimePicker2.Value = DateTime.Parse("2019-01-01");
+                this.dateTimePicker2.Value = DateTime.Parse("2019-01-15");
             }
 
             ComboBoxItem Department = (ComboBoxItem)this.comboBox1.SelectedItem;
