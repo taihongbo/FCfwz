@@ -35,8 +35,16 @@ else
  
 print(@whe)
 
-set @sql=''
+ 
 
+set @sql='' 
+set @sql=@sql + ' Update H3_划价记录 Set H3_划价记录.类别编码 = H7_药典明细.类码 From H7_药典明细 Where H3_划价记录.药品编码=H7_药典明细.药码  And substring(H3_划价记录.类别编码,1,1) NOT  in (''A'',''B'',''C'',''D'' ) And H3_划价记录.类别编码!=''''  '
+print(@sql)
+execute(@sql) 
+
+
+
+set @sql='' 
 if (@t=0)
 	begin
 		set @sql=@sql + 'Select * from ('
@@ -56,14 +64,14 @@ if (@t=0)
 		set @sql=@sql + '  On t1.类码 =t3.类码 '
 		set @sql=@sql + '  inner join  '
 		set @sql=@sql + ' (Select B.类码, B.类名, A.部门编码,A.部门名称,A.药品编码,A.药品名称,A.规格,A.单位,A.单价,sum(A.总量) as sl_t4,sum(A.金额) as je_t4 '
-		set @sql=@sql + '   From H3_划价记录 As A Left Join  H7_药典总帐 AS B On B.药码 = A.药品编码   '
+		set @sql=@sql + '   From H3_划价记录 As A Left Join  (Select 类码,类名,药码 From H7_药典总帐 Group by 类码,类名,药码) AS B On B.药码 = A.药品编码   '
 		set @sql=@sql + '   Where A.C3=''门诊'' And  A.交款标志 in (''已交款'',''已发药'')   And '+ @whe  
 		set @sql=@sql + '   Group By B.类码, B.类名 ,A.部门编码,A.部门名称,A.药品编码,A.药品名称,A.规格,A.单位,A.单价  '
 		set @sql=@sql + ' ) T4 '
 		set @sql=@sql + ' On t1.类码 =t4.类码 And t3.药品编码 =t4.药品编码 And t3.药品名称 =t4.药品名称 And t3.规格 =t4.规格 And t3.单位 =t4.单位 And t3.单价 =t4.单价  '
 		set @sql=@sql + '  inner join  '
 		set @sql=@sql + ' (Select B.类码, B.类名, A.部门编码,A.部门名称,A.医师编码,A.医师名称,A.药品编码,A.药品名称,A.规格,A.单位,A.单价,sum(A.总量) as sl_t5,sum(A.金额) as je_t5 '
-		set @sql=@sql + '   From H3_划价记录 As A Left Join  H7_药典总帐 AS B On B.药码 = A.药品编码   '
+		set @sql=@sql + '   From H3_划价记录 As A Left Join  (Select 类码,类名,药码 From H7_药典总帐 Group by 类码,类名,药码) AS B On B.药码 = A.药品编码   '
 		set @sql=@sql + '   Where A.C3=''门诊'' And  A.交款标志 in (''已交款'',''已发药'')    And '+ @whe 
 		set @sql=@sql + '   Group By B.类码, B.类名, A.部门编码,A.部门名称,A.医师编码,A.医师名称,A.药品编码,A.药品名称,A.规格,A.单位,A.单价  '
 		set @sql=@sql + ' ) T5 '
@@ -83,7 +91,7 @@ else
 		set @sql=@sql + ' ) T1 '
 		set @sql=@sql + ' inner join '
 		set @sql=@sql + ' (Select B.类码, B.类名, A.药品编码,A.药品名称,A.规格,A.单位,A.单价,sum(A.总量) as sl_t3,sum(A.金额) as je_t3  '
-		set @sql=@sql + '   From H3_划价记录 As A Left Join  H7_药典总帐 AS B On B.药码 = A.药品编码   '
+		set @sql=@sql + '   From H3_划价记录 As A Left Join  (Select 类码,类名,药码 From H7_药典总帐 Group by 类码,类名,药码) AS B On B.药码 = A.药品编码   '
 		set @sql=@sql + '   Where A.C3=''门诊'' And  A.交款标志 in (''已交款'',''已发药'')  And '+ @whe 
 		set @sql=@sql + '   Group By B.类码, B.类名 , A.药品编码,A.药品名称,A.规格,A.单位,A.单价 '
 		set @sql=@sql + ' ) T3 '
